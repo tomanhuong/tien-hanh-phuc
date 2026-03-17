@@ -184,20 +184,171 @@ header{
 .ibtn:hover{border-color:var(--teal);color:var(--teal)}
 .ibtn:disabled{opacity:.5;cursor:not-allowed}
 
-/* ── NAV TABS ── */
-nav{
-  background:rgba(11,15,25,0.9);
+/* ── PRIMARY NAV — pinned horizontal 4+more tabs ── */
+.pnav{
+  position:sticky;top:var(--header-h,52px);z-index:50;
+  background:rgba(11,15,25,.97);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  padding-left:max(.5rem,var(--sal));
+  padding-right:max(.5rem,var(--sar));
+}
+.pnav-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;gap:0;
+}
+.ptab{
+  display:flex;align-items:center;gap:.45rem;
+  padding:.75rem 1.35rem;
+  background:none;border:none;border-bottom:2px solid transparent;
+  font-family:'Space Mono',monospace;font-size:.72rem;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--txt3);cursor:pointer;white-space:nowrap;
+  transition:color .18s,border-color .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.ptab:hover{color:var(--txt2)}
+.ptab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.pt-ico{font-size:.9rem;line-height:1;flex-shrink:0}
+.pt-lbl{font-size:.68rem}
+@media(max-width:600px){.pt-lbl{display:none}.ptab{padding:.7rem .85rem}}
+
+/* ── SECONDARY NAV — all tabs, scrollable, toggled ── */
+.snav{
+  background:rgba(11,15,25,.92);
   border-bottom:1px solid var(--border);
   overflow-x:auto;
-  padding-left:max(2rem, calc(var(--sal) + 1rem));
-  padding-right:max(2rem, calc(var(--sar) + 1rem));
+  padding-left:max(2rem,calc(var(--sal)+1rem));
+  padding-right:max(2rem,calc(var(--sar)+1rem));
+  max-height:46px;
+  transition:max-height .22s cubic-bezier(.4,0,.2,1),opacity .18s;
+  overflow:hidden;
 }
+.snav.snav-hidden{max-height:0;opacity:0;pointer-events:none}
+.snav.snav-open{max-height:46px;opacity:1;pointer-events:all}
 .nav-inner{max-width:1400px;margin:0 auto;display:flex}
-.ntab{padding:.9rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.72rem;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.ntab{padding:.78rem 1.25rem;font-family:'Space Mono',monospace;font-size:.68rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--txt3);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap;flex-shrink:0}
 .ntab:hover{color:var(--txt2)}
 .ntab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── WORKSPACE — horizontal panel layout on desktop (≥1024px) ── */
+/* 4 panels: Dashboard | Nhập liệu | Đầu tư | Phân tích */
+#workspace{
+  display:none;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto auto;
+  gap:1.25rem;
+  max-width:1400px;margin:0 auto;
+  padding:1.5rem 2rem 4rem;
+}
+@media(min-width:1024px){
+  #workspace{display:grid}
+  /* Hide normal single-tab view, show workspace instead for core 4 tabs */
+  body.ws-mode #tab-dashboard,
+  body.ws-mode #tab-input,
+  body.ws-mode #tab-invest,
+  body.ws-mode #tab-analytics{display:none !important}
+  body.ws-mode #workspace{display:grid !important}
+}
+.ws-panel{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);
+  display:flex;flex-direction:column;
+  max-height:calc(100vh - 200px);min-height:300px;
+  transition:border-color .2s,box-shadow .2s;overflow:hidden;
+}
+.ws-panel:hover{border-color:var(--border-h)}
+.ws-panel.ws-focus{border-color:rgba(240,192,64,.4);box-shadow:0 0 0 1px rgba(240,192,64,.08)}
+.ws-panel-hdr{
+  position:sticky;top:0;z-index:5;
+  background:rgba(26,24,68,.98);backdrop-filter:blur(12px);
+  padding:.75rem 1.1rem .65rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.6rem;flex-shrink:0;
+  border-radius:var(--r) var(--r) 0 0;
+}
+.ws-panel-title{font-family:'Crimson Text',serif;font-size:.95rem;color:var(--gold);flex:1}
+.ws-panel-body{flex:1;overflow-y:auto;padding:1.1rem}
+/* Layer asset list inside workspace Input panel */
+.wsl-section{margin-bottom:.85rem;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden}
+.wsl-hdr{
+  display:flex;align-items:center;gap:.55rem;padding:.55rem .85rem;
+  background:rgba(255,255,255,.025);cursor:pointer;user-select:none;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.wsl-hdr:hover{background:rgba(255,255,255,.04)}
+.wsl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.wsl-name{font-size:.72rem;font-weight:700;flex:1}
+.wsl-total{font-family:'Crimson Text',serif;font-size:.88rem;font-weight:600}
+.wsl-cash-badge{font-size:.58rem;padding:.1rem .4rem;border-radius:8px;
+  background:rgba(240,192,64,.1);color:var(--gold);white-space:nowrap}
+.wsl-body{padding:.5rem .85rem .6rem}
+.wsl-row{
+  display:grid;grid-template-columns:minmax(0,1fr) auto auto;
+  align-items:center;gap:.4rem;padding:.3rem 0;
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+.wsl-row:last-child{border-bottom:none}
+.wsl-asset-name{font-size:.68rem;color:var(--txt2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wsl-asset-val{
+  font-size:.78rem;font-weight:700;font-family:'Crimson Text',serif;
+  color:var(--txt);text-align:right;white-space:nowrap;min-width:80px;
+}
+.wsl-edit-wrap{display:flex;align-items:center;gap:.25rem}
+.wsl-val-inp{
+  width:95px;padding:.2rem .38rem;background:rgba(255,255,255,.06);
+  border:1px solid var(--border);border-radius:4px;
+  color:var(--txt);font-family:'Space Mono',monospace;font-size:.65rem;
+  text-align:right;outline:none;transition:border-color .15s;display:none;
+}
+.wsl-val-inp:focus{border-color:var(--gold)}
+.wsl-val-inp.editing{display:block}
+.wsl-asset-val.editing{display:none}
+.wsl-btn{
+  padding:.16rem .38rem;background:transparent;
+  border:1px solid var(--border);border-radius:3px;
+  color:var(--txt3);font-size:.58rem;cursor:pointer;
+  transition:all .15s;white-space:nowrap;flex-shrink:0;
+}
+.wsl-btn:hover,.wsl-btn.save-btn{border-color:var(--gold);color:var(--gold)}
+.wsl-btn.save-btn{background:rgba(240,192,64,.1)}
+.wsl-btn.del-btn:hover{border-color:var(--danger);color:var(--danger)}
+.wsl-add{
+  width:100%;margin-top:.4rem;padding:.28rem;text-align:center;
+  background:transparent;border:1px dashed rgba(255,255,255,.08);
+  border-radius:4px;color:var(--txt3);font-size:.6rem;cursor:pointer;
+  transition:all .18s;
+}
+.wsl-add:hover{border-color:var(--teal);color:var(--teal)}
+@media(max-width:1023px){
+  #workspace{display:none !important}
+}
+
+/* ── STATUS BAR — pinned bottom, desktop only ── */
+.status-bar{
+  display:none; /* shown by JS on desktop */
+  position:fixed;bottom:0;left:0;right:0;z-index:55;
+  background:rgba(11,15,25,.97);
+  border-top:1px solid var(--border);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  padding:.45rem max(2rem,calc(var(--sal)+1rem));
+  padding-bottom:max(.45rem,var(--sab));
+}
+.status-bar-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;
+}
+.sb-item{display:flex;flex-direction:column;gap:.05rem}
+.sb-lbl{font-size:.52rem;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase}
+.sb-val{font-size:.78rem;font-weight:700;font-family:'Crimson Text',serif}
+.sb-val.gold{color:var(--gold)}
+.sb-val.teal{color:var(--teal)}
+.sb-sep{color:var(--txt3);font-size:.65rem;align-self:center}
+@media(min-width:769px){
+  .status-bar{display:block}
+  .main{padding-bottom:calc(2.5rem + 42px + var(--sab))} /* clear status bar */
+}
+@media(max-width:768px){.status-bar{display:none}}
 
 /* ── MAIN — desktop gutter + mobile padding-bottom for bnav ── */
 .main{
@@ -1339,27 +1490,69 @@ input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(240,192,
 <div id="app" style="display:none">
   <header>
     <div class="htitle">⬡ Tháp Tài Sản</div>
-    <div class="htotal"><span>Tổng tài sản</span><span class="v" id="htot">—</span></div>
+    <div class="htotal"><span>Tổng TS</span><span class="v" id="htot">—</span></div>
     <div class="hact">
       <button class="ibtn" id="sync-btn" onclick="syncSheets()">↑↓ Sync</button>
-      <button class="ibtn" onclick="openSettings()">⚙ Cài đặt</button>
-      <button class="ibtn" onclick="lockApp()" style="color:var(--txt3)">⎋ Khóa</button>
+      <button class="ibtn" onclick="openSettings()">⚙</button>
+      <button class="ibtn" onclick="lockApp()" style="color:var(--txt3)">⎋</button>
     </div>
   </header>
-  <nav>
-    <div class="ntab active" id="nt0" onclick="goTab('dashboard',0)">Dashboard</div>
-    <div class="ntab" id="nt1" onclick="goTab('input',1)">Nhập liệu</div>
-    <div class="ntab" id="nt2" onclick="goTab('assets',2)">Danh mục</div>
-    <div class="ntab" id="nt3" onclick="goTab('invest',3)">Quyết định ĐT</div>
-    <div class="ntab" id="nt4" onclick="goTab('journal',4)">Nhật ký lệnh</div>
-    <div class="ntab" id="nt5" onclick="goTab('analytics',5)">Phân tích</div>
-    <div class="ntab" id="nt6" onclick="goTab('goals',6)">Mục tiêu</div>
-    <div class="ntab" id="nt7" onclick="goTab('sim',7)">Kịch bản</div>
-    <div class="ntab" id="nt8" onclick="goTab('htth',8)">Hệ Tuần Hoàn</div>
-    <div class="ntab" id="nt9" onclick="goTab('budget',9)">Ngân sách</div>
-    <div class="ntab" id="nt10" onclick="goTab('report',10)">Báo cáo</div>
-    <div class="ntab" id="nt11" onclick="goTab('help',11)">? Hướng dẫn</div>
+
+  <!-- PRIMARY NAV — 4 core + More, always pinned horizontal -->
+  <div class="pnav" id="pnav">
+    <div class="pnav-inner">
+      <button class="ptab active" id="pt0" onclick="goTab('dashboard',0);ptActive(0)">
+        <span class="pt-ico">⬡</span><span class="pt-lbl">Dashboard</span>
+      </button>
+      <button class="ptab" id="pt1" onclick="goTab('input',1);ptActive(1)">
+        <span class="pt-ico">＋</span><span class="pt-lbl">Nhập liệu</span>
+      </button>
+      <button class="ptab" id="pt2" onclick="goTab('invest',3);ptActive(2)">
+        <span class="pt-ico">◈</span><span class="pt-lbl">Đầu tư</span>
+      </button>
+      <button class="ptab" id="pt3" onclick="goTab('analytics',5);ptActive(3)">
+        <span class="pt-ico">⟁</span><span class="pt-lbl">Phân tích</span>
+      </button>
+      <button class="ptab" id="pt-more" onclick="toggleSecondaryNav()">
+        <span class="pt-ico">···</span><span class="pt-lbl">Thêm</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SECONDARY NAV — all 12 tabs, scrollable, collapses by default on desktop -->
+  <nav id="snav" class="snav snav-hidden">
+    <div class="nav-inner">
+      <div class="ntab active" id="nt0" onclick="goTab('dashboard',0)">Dashboard</div>
+      <div class="ntab" id="nt1" onclick="goTab('input',1)">Nhập liệu</div>
+      <div class="ntab" id="nt2" onclick="goTab('assets',2)">Danh mục TS</div>
+      <div class="ntab" id="nt3" onclick="goTab('invest',3)">Đầu tư</div>
+      <div class="ntab" id="nt4" onclick="goTab('journal',4)">Nhật ký lệnh</div>
+      <div class="ntab" id="nt5" onclick="goTab('analytics',5)">Phân tích</div>
+      <div class="ntab" id="nt6" onclick="goTab('goals',6)">Mục tiêu</div>
+      <div class="ntab" id="nt7" onclick="goTab('sim',7)">Kịch bản</div>
+      <div class="ntab" id="nt8" onclick="goTab('htth',8)">Hệ Tuần Hoàn</div>
+      <div class="ntab" id="nt9" onclick="goTab('budget',9)">Ngân sách</div>
+      <div class="ntab" id="nt10" onclick="goTab('report',10)">Báo cáo</div>
+      <div class="ntab" id="nt11" onclick="goTab('help',11)">Hướng dẫn</div>
+    </div>
   </nav>
+
+  <!-- STATUS BAR — desktop only, pinned bottom -->
+  <div class="status-bar" id="status-bar">
+    <div class="status-bar-inner">
+      <span class="sb-item"><span class="sb-lbl">Tổng tài sản</span><span class="sb-val gold" id="sb-total">—</span></span>
+      <span class="sb-sep">·</span>
+      <span class="sb-item"><span class="sb-lbl">Tiền mặt sẵn ĐT</span><span class="sb-val teal" id="sb-cash">—</span></span>
+      <span class="sb-sep">·</span>
+      <span class="sb-item"><span class="sb-lbl">CS#9</span><span class="sb-val" id="sb-cs9">—</span></span>
+      <span class="sb-sep">·</span>
+      <span class="sb-item"><span class="sb-lbl">Vị thế mở</span><span class="sb-val" id="sb-trades">—</span></span>
+      <span style="margin-left:auto;display:flex;gap:.5rem">
+        <button class="ibtn" style="font-size:.6rem;padding:.2rem .6rem" onclick="goTab('input',1);ptActive(1)">＋ Thêm tài sản</button>
+        <button class="ibtn" style="font-size:.6rem;padding:.2rem .6rem" onclick="goTab('invest',3);ptActive(2)">◈ Tạo lệnh ĐT</button>
+      </span>
+    </div>
+  </div>
 
   <!-- Mobile bottom nav (5 key tabs) -->
   <nav class="bnav" id="bnav">
@@ -1380,37 +1573,59 @@ input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(240,192,
     </button>
   </nav>
 
-  <!-- FAB quick-action (mobile) -->
+  <!-- FAB — 4 actions max -->
   <div class="fab-menu" id="fab-menu">
-    <!-- Daily use — highest priority -->
-    <div class="fab-item" onclick="bgAddExpenseFab();closeFab()">
-      <span class="fi-ico">◉</span>Nhập chi phí hôm nay
-    </div>
-    <div class="fab-item" onclick="goTab('htth',8);closeFab()">
-      <span class="fi-ico">♥</span>Cập nhật Hệ Tuần Hoàn
-    </div>
-    <div class="fab-sep"></div>
-    <!-- Weekly use -->
-    <div class="fab-item" onclick="goTab('input',1);closeFab()">
-      <span class="fi-ico">＋</span>Thêm / Cập nhật tài sản
-    </div>
-    <div class="fab-item" onclick="goTab('invest',3);closeFab()">
-      <span class="fi-ico">◈</span>Tạo quyết định đầu tư
-    </div>
-    <div class="fab-sep"></div>
-    <!-- Monthly use -->
-    <div class="fab-item" onclick="goTab('goals',6);closeFab()">
-      <span class="fi-ico">◎</span>Theo dõi mục tiêu
-    </div>
-    <div class="fab-item" onclick="goTab('report',10);closeFab()">
-      <span class="fi-ico">⎙</span>Tạo báo cáo tháng
-    </div>
-    <div class="fab-sep"></div>
-    <div class="fab-item" onclick="goTab('help',11);closeFab()">
-      <span class="fi-ico">?</span>Hướng dẫn sử dụng
-    </div>
+    <div class="fab-item" onclick="bgAddExpenseFab();closeFab()"><span class="fi-ico">◉</span>Nhập chi phí hôm nay</div>
+    <div class="fab-item" onclick="wsAddAsset();closeFab()"><span class="fi-ico">＋</span>Thêm tài sản</div>
+    <div class="fab-item" onclick="goTab('invest',3);ptActive(2);closeFab()"><span class="fi-ico">◈</span>Tạo lệnh đầu tư</div>
+    <div class="fab-item" onclick="goTab('htth',8);closeFab()"><span class="fi-ico">♥</span>Cập nhật Hệ Tuần Hoàn</div>
   </div>
   <button class="fab" id="fab-btn" onclick="toggleFab()" title="Quick actions">＋</button>
+
+  <!-- WORKSPACE — desktop horizontal panel layout -->
+  <div id="workspace">
+    <!-- Panel 1: Dashboard -->
+    <div class="ws-panel" id="ws-dashboard" onclick="this.classList.add('ws-focus')" onfocusout="this.classList.remove('ws-focus')">
+      <div class="ws-panel-hdr">
+        <span class="ws-panel-title">⬡ Dashboard</span>
+        <button class="ibtn" style="font-size:.58rem;padding:.2rem .5rem" onclick="renderDash()">↻</button>
+        <button class="ibtn" style="font-size:.58rem;padding:.2rem .5rem" onclick="goTab('dashboard',0)">Mở rộng →</button>
+      </div>
+      <div class="ws-panel-body" id="ws-dash-body">
+        <div id="ws-sgrid"></div>
+        <div id="ws-tbars-wrap" style="margin-top:1rem"></div>
+        <div id="ws-dft-mini" style="margin-top:1rem"></div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Nhập liệu / Layer Assets -->
+    <div class="ws-panel" id="ws-input">
+      <div class="ws-panel-hdr">
+        <span class="ws-panel-title">📂 Tài sản theo lớp</span>
+        <span id="ws-total-badge" style="font-family:'Crimson Text',serif;font-size:.85rem;color:var(--teal)"></span>
+        <button class="ibtn" style="font-size:.58rem;padding:.2rem .5rem" onclick="wsAddAsset()">＋ Thêm</button>
+      </div>
+      <div class="ws-panel-body" id="ws-layer-body"></div>
+    </div>
+
+    <!-- Panel 3: Đầu tư -->
+    <div class="ws-panel" id="ws-invest">
+      <div class="ws-panel-hdr">
+        <span class="ws-panel-title">◈ Danh mục đầu tư</span>
+        <button class="ibtn" style="font-size:.58rem;padding:.2rem .5rem" onclick="goTab('invest',3);ptActive(2)">Lập kế hoạch →</button>
+      </div>
+      <div class="ws-panel-body" id="ws-port-body"></div>
+    </div>
+
+    <!-- Panel 4: Phân tích -->
+    <div class="ws-panel" id="ws-analytics">
+      <div class="ws-panel-hdr">
+        <span class="ws-panel-title">⟁ Đề xuất & Cảnh báo</span>
+        <button class="ibtn" style="font-size:.58rem;padding:.2rem .5rem" onclick="goTab('analytics',5);ptActive(3)">Chi tiết →</button>
+      </div>
+      <div class="ws-panel-body" id="ws-cascade-body"></div>
+    </div>
+  </div>
 
   <main class="main">
 
@@ -3291,6 +3506,8 @@ function showApp() {
   renderDash();
   renderAssets();
   htthInit();
+  // Init workspace on desktop
+  setTimeout(wsInit, 100);
 }
 
 function lockApp() {
@@ -3329,6 +3546,14 @@ function saveS() {
     localStorage.setItem('tts_v2', JSON.stringify(S));
     const b = document.getElementById('save-badge');
     if (b) { b.classList.add('show'); clearTimeout(b._t); b._t = setTimeout(()=>b.classList.remove('show'), 1800); }
+    updateStatusBar && updateStatusBar();
+    // Refresh workspace panels if on desktop
+    if (document.body.classList.contains('ws-mode')) {
+      wsRenderDash();
+      wsRenderLayers();
+      wsRenderPortfolio();
+      wsRenderCascade();
+    }
   }
   catch(e) { toast('Lỗi lưu dữ liệu','err'); }
 }
@@ -3399,6 +3624,336 @@ function layerTotals() {
 // ═══════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════
+// ═══════════════════════════════════════
+// WORKSPACE ENGINE — desktop 4-panel layout
+// ═══════════════════════════════════════
+
+function wsInit() {
+  // Only run on desktop (CSS hides #workspace on <1024px anyway)
+  if (window.innerWidth < 1024) return;
+  document.body.classList.add('ws-mode');
+  wsRender();
+}
+
+function wsRender() {
+  wsRenderDash();
+  wsRenderLayers();
+  wsRenderPortfolio();
+  wsRenderCascade();
+}
+
+// Panel 1: Dashboard mini
+function wsRenderDash() {
+  const el = document.getElementById('ws-sgrid');
+  if (!el) return;
+  const { t, total } = layerTotals();
+  const cfg = S.cfg;
+  const debt = pNum(cfg.totalDebt || 0);
+  const netWorth = total - debt;
+  const badge = document.getElementById('ws-total-badge'); // reuse for header
+
+  // Mini stat cards
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem">
+      ${[
+        {lbl:'Tổng tài sản ròng', val:fmtPlain(total), col:'var(--gold)', sub:S.assets.filter(a=>a.lid!==1).length+' tài sản'},
+        {lbl:'Tài sản ròng', val:fmtPlain(netWorth), col:netWorth>=0?'var(--ok)':'var(--danger)', sub:debt>0?'Nợ '+fmtPlain(debt):'Không có nợ'},
+      ].map(k=>`<div style="padding:.75rem .9rem;background:rgba(255,255,255,.025);
+          border:1px solid var(--border);border-radius:var(--rs)">
+        <div style="font-size:.58rem;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem">${k.lbl}</div>
+        <div style="font-family:'Crimson Text',serif;font-size:1.2rem;font-weight:600;color:${k.col}">${k.val}</div>
+        <div style="font-size:.6rem;color:var(--txt3)">${k.sub}</div>
+      </div>`).join('')}
+    </div>`;
+
+  // Layer distribution mini-bars
+  const tbarsEl = document.getElementById('ws-tbars-wrap');
+  if (tbarsEl) {
+    tbarsEl.innerHTML = '<div style="font-size:.58rem;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.55rem">Phân bổ lớp tháp</div>' +
+      LAYERS.filter(l=>l.id!==1).map(l => {
+        const v = t[l.id]||0;
+        const pct = total>0 ? v/total*100 : 0;
+        const [mn,mx] = l.tgt;
+        const ok = pct>=mn-2 && pct<=mx+5;
+        return `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+          <span style="font-size:.62rem;color:${l.col};width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.id}. ${l.name}</span>
+          <div style="flex:1;height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${Math.min(pct*4,100)}%;background:${l.col};border-radius:3px;transition:width .6s"></div>
+          </div>
+          <span style="font-size:.62rem;font-weight:700;color:${ok?'var(--ok)':'var(--warn)'};min-width:38px;text-align:right">${pct.toFixed(0)}%</span>
+          <span style="font-size:.58rem;color:var(--txt3);min-width:60px;text-align:right">${fmtPlain(v)}</span>
+        </div>`;
+      }).join('');
+  }
+
+  // Mini DFT (today only)
+  const dftEl = document.getElementById('ws-dft-mini');
+  if (dftEl) {
+    const today = bgToday();
+    const todayInc = bgGetIncomes(today, today).reduce((s,e)=>s+(e.amt||0),0);
+    const todayExp = bgGetExpenses(today, today).reduce((s,e)=>s+(e.amt||0),0);
+    const net = todayInc - todayExp;
+    dftEl.innerHTML = `
+      <div style="font-size:.58rem;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem">Hôm nay</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+        <div style="text-align:center;padding:.5rem;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:var(--rs)">
+          <div style="font-size:.58rem;color:var(--txt3)">Thu</div>
+          <div style="font-size:.88rem;font-weight:700;color:var(--ok)">${fmtPlain(todayInc)||'—'}</div>
+        </div>
+        <div style="text-align:center;padding:.5rem;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:var(--rs)">
+          <div style="font-size:.58rem;color:var(--txt3)">Chi</div>
+          <div style="font-size:.88rem;font-weight:700;color:var(--warn)">${fmtPlain(todayExp)||'—'}</div>
+        </div>
+        <div style="text-align:center;padding:.5rem;background:rgba(${net>=0?'16,185,129':'239,68,68'},.06);border:1px solid rgba(${net>=0?'16,185,129':'239,68,68'},.15);border-radius:var(--rs)">
+          <div style="font-size:.58rem;color:var(--txt3)">Ròng</div>
+          <div style="font-size:.88rem;font-weight:700;color:${net>=0?'var(--ok)':'var(--danger)'}">
+            ${net>=0?'+':''}${fmtPlain(Math.abs(net))||'—'}
+          </div>
+        </div>
+      </div>`;
+  }
+}
+
+// Panel 2: Layer assets — full editable list
+function wsRenderLayers() {
+  const el = document.getElementById('ws-layer-body');
+  if (!el) return;
+  const { t, cash, invested, total } = layerTotals();
+
+  const badge = document.getElementById('ws-total-badge');
+  if (badge) badge.textContent = fmtPlain(total);
+
+  el.innerHTML = LAYERS.map(l => {
+    const layerTotal = t[l.id]||0;
+    const cashAmt    = cash[l.id]||0;
+    const investedAmt= invested[l.id]||0;
+    const pctOfTotal = total>0 ? layerTotal/total*100 : 0;
+    const isIntangible = l.id === 1;
+    const layerAssets = S.assets.filter(a=>a.lid===l.id).sort((a,b)=>(b.val||0)-(a.val||0));
+
+    const assetRows = layerAssets.map(a => {
+      const liveP = a.ticker ? (getPrice(a.ticker,'stock')||getPrice(a.ticker,'crypto')||0) : 0;
+      const displayVal = liveP>0&&(a.qty||0)>0 ? liveP*a.qty : a.val;
+      return `<div class="wsl-row" id="wsl-row-${a.id}">
+        <div class="wsl-asset-name" title="${a.name}">
+          ${isCashAsset(a)?'💰':'📊'} ${a.name}
+          ${a.ticker?`<span style="color:var(--teal);font-size:.58rem"> ${a.ticker}</span>`:''}
+        </div>
+        <div class="wsl-edit-wrap">
+          <span class="wsl-asset-val" id="wsl-val-${a.id}">${fmtPlain(displayVal)}</span>
+          <input class="wsl-val-inp" id="wsl-inp-${a.id}" type="text" value="${displayVal.toLocaleString('vi-VN')}"
+            oninput="fmtInpRaw(this)" onkeydown="if(event.key==='Enter')wsConfirmEdit('${a.id}');if(event.key==='Escape')wsCancelEdit('${a.id}')">
+        </div>
+        <div style="display:flex;gap:.2rem">
+          <button class="wsl-btn" id="wsl-btn-${a.id}" onclick="wsStartEdit('${a.id}')">✎</button>
+          <button class="wsl-btn del-btn" onclick="wsDeleteAsset('${a.id}')">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="wsl-section">
+      <div class="wsl-hdr" onclick="wsToggleLayer(${l.id})">
+        <span class="wsl-dot" style="background:${l.col}"></span>
+        <span class="wsl-name" style="color:${l.col}">${l.id}. ${l.name}</span>
+        ${cashAmt>0?`<span class="wsl-cash-badge">💰 ${fmtPlain(cashAmt)}</span>`:''}
+        ${!isIntangible?`<span style="font-size:.6rem;color:var(--txt3)">${pctOfTotal.toFixed(0)}%</span>`:''}
+        <span class="wsl-total" style="color:${l.col}">${fmtPlain(layerTotal)}</span>
+        <span style="font-size:.65rem;color:var(--txt3);margin-left:.2rem" id="wsl-chevron-${l.id}">▾</span>
+      </div>
+      <div class="wsl-body" id="wsl-body-${l.id}">
+        ${assetRows || `<div style="font-size:.65rem;color:var(--txt3);padding:.3rem 0">Chưa có tài sản</div>`}
+        <button class="wsl-add" onclick="wsAddAssetInLayer(${l.id})">＋ Thêm tài sản lớp ${l.id}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function wsToggleLayer(lid) {
+  const body = document.getElementById(`wsl-body-${lid}`);
+  const chev = document.getElementById(`wsl-chevron-${lid}`);
+  if (!body) return;
+  const collapsed = body.style.display === 'none';
+  body.style.display = collapsed ? '' : 'none';
+  if (chev) chev.textContent = collapsed ? '▾' : '▸';
+}
+
+function wsStartEdit(id) {
+  const inp  = document.getElementById(`wsl-inp-${id}`);
+  const val  = document.getElementById(`wsl-val-${id}`);
+  const btn  = document.getElementById(`wsl-btn-${id}`);
+  const a    = S.assets.find(x=>x.id===id);
+  if (!inp||!val||!a) return;
+  inp.value = a.val.toLocaleString('vi-VN');
+  inp.classList.add('editing');
+  val.classList.add('editing');
+  if (btn) { btn.textContent = '✓'; btn.classList.add('save-btn'); btn.onclick = ()=>wsConfirmEdit(id); }
+  inp.focus(); inp.select();
+}
+
+function wsConfirmEdit(id) {
+  const inp = document.getElementById(`wsl-inp-${id}`);
+  const val = document.getElementById(`wsl-val-${id}`);
+  const btn = document.getElementById(`wsl-btn-${id}`);
+  if (!inp) return;
+  const newVal = pNum(inp.value);
+  if (!newVal || newVal < 0) { toast('Giá trị không hợp lệ','err'); return; }
+  const i = S.assets.findIndex(x=>x.id===id);
+  if (i>=0) {
+    const old = S.assets[i].val;
+    S.assets[i].val = newVal; S.assets[i].date = today();
+    saveS();
+    // Update display
+    if (val) val.textContent = fmtPlain(newVal);
+    inp.classList.remove('editing');
+    val.classList.remove('editing');
+    if (btn) { btn.textContent='✎'; btn.classList.remove('save-btn'); btn.onclick=()=>wsStartEdit(id); }
+    wsRenderDash(); wsRenderCascade();
+    renderDash();
+    const diff = newVal-old;
+    toast(`${S.assets[i].name}: ${diff>=0?'+':''}${fmtPlain(diff)} ✓`);
+  }
+}
+
+function wsCancelEdit(id) {
+  const inp = document.getElementById(`wsl-inp-${id}`);
+  const val = document.getElementById(`wsl-val-${id}`);
+  const btn = document.getElementById(`wsl-btn-${id}`);
+  if (inp) inp.classList.remove('editing');
+  if (val) val.classList.remove('editing');
+  if (btn) { btn.textContent='✎'; btn.classList.remove('save-btn'); btn.onclick=()=>wsStartEdit(id); }
+}
+
+function wsDeleteAsset(id) {
+  const a = S.assets.find(x=>x.id===id);
+  if (!a || !confirm(`Xóa "${a.name}"?`)) return;
+  S.assets = S.assets.filter(x=>x.id!==id);
+  saveS(); wsRenderLayers(); wsRenderDash(); renderDash();
+  toast(`Đã xóa ${a.name} ✓`);
+}
+
+function wsAddAsset() {
+  goTab('input',1); ptActive(1);
+  setTimeout(()=>document.getElementById('f-name')?.focus(), 200);
+}
+
+function wsAddAssetInLayer(lid) {
+  goTab('input',1); ptActive(1);
+  const el = document.getElementById('f-layer');
+  if (el) { el.value = lid; updateCats(); }
+  setAssetType('invested');
+  setTimeout(()=>document.getElementById('f-name')?.focus(), 200);
+}
+
+// Panel 3: Portfolio mini
+function wsRenderPortfolio() {
+  const el = document.getElementById('ws-port-body');
+  if (!el) return;
+  const opens = (S.trades||[]).filter(t=>t.status==='open');
+  if (!opens.length) {
+    el.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--txt3);font-size:.72rem">
+      Chưa có vị thế mở<br>
+      <span style="color:var(--gold);cursor:pointer;font-size:.68rem" onclick="goTab('invest',3);ptActive(2)">
+        → Tạo lệnh đầu tư
+      </span>
+    </div>`;
+    return;
+  }
+  const typeIco = {stock:'📈',crypto:'₿',etf:'⟁',re:'🏠',biz:'⬡',other:'◎'};
+  const STRAT = {swing:{lbl:'Lướt',col:'#EC4899'},mid:{lbl:'TB',col:'var(--teal)'},long:{lbl:'DH',col:'var(--ok)'}};
+  el.innerHTML = opens.map(t => {
+    const cp = getPrice(t.name, t.atype);
+    const qty = t.wavg>0 ? (t.totalAmt||t.budget||0)/t.wavg : 0;
+    const liveVal = cp&&qty>0 ? cp*qty : (t.totalAmt||t.budget||0);
+    const pnlAmt  = liveVal - (t.totalAmt||t.budget||0);
+    const pnlPct  = (t.totalAmt||t.budget||0)>0 ? pnlAmt/(t.totalAmt||t.budget||0)*100 : 0;
+    const sm = STRAT[t.strategy||'mid'];
+    return `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:.5rem;
+        align-items:center;padding:.55rem .6rem;
+        background:rgba(255,255,255,.02);border:1px solid var(--border);
+        border-radius:var(--rs);margin-bottom:.4rem;
+        transition:border-color .15s;cursor:pointer"
+        onmouseover="this.style.borderColor='var(--border-h)'"
+        onmouseout="this.style.borderColor='var(--border)'"
+        onclick="ivSubTab('port',document.getElementById('iv-tab-port'));goTab('invest',3);ptActive(2)">
+      <span style="font-size:.85rem">${typeIco[t.atype]||'◎'}</span>
+      <div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--txt)">${t.name}
+          <span style="font-size:.58rem;font-weight:700;color:${sm.col};margin-left:.3rem">${sm.lbl}</span>
+        </div>
+        <div style="font-size:.6rem;color:var(--txt3)">
+          ${fmtPlain(t.totalAmt||t.budget||0)} · ${qty>=1?Math.round(qty).toLocaleString('vi-VN')+'đv':qty.toFixed(3)+'đv'}
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:.75rem;font-weight:700;color:${pnlAmt>=0?'var(--ok)':'var(--danger)'}">
+          ${pnlAmt>=0?'+':''}${fmtPlain(pnlAmt)}
+        </div>
+        <div style="font-size:.62rem;color:${pnlPct>=0?'var(--ok)':'var(--danger)'}">
+          ${pnlPct>=0?'+':''}${pnlPct.toFixed(1)}%
+        </div>
+      </div>
+    </div>`;
+  }).join('') +
+  `<div style="text-align:center;margin-top:.75rem">
+    <span style="font-size:.65rem;color:var(--gold);cursor:pointer"
+      onclick="ivSubTab('port',document.getElementById('iv-tab-port'));goTab('invest',3);ptActive(2)">
+      Xem đầy đủ danh mục →
+    </span>
+  </div>`;
+}
+
+// Panel 4: Cascade notifications
+function wsRenderCascade() {
+  const el = document.getElementById('ws-cascade-body');
+  if (!el) return;
+  // Reuse cascade engine, just render into workspace panel
+  const trades = S.trades || [];
+  const opens = trades.filter(x=>x.status==='open');
+  const notes = [];
+
+  opens.forEach(t => {
+    const alerts = getTradeAlerts(t);
+    alerts.forEach(a => {
+      if (a.type==='tp') notes.push({ico:'🟢',priority:0,title:`${t.name}: TP đạt`,desc:'Cân nhắc chốt lời',fn:()=>{ goTab('invest',3); ivSubTab('port',null); }});
+      else if (a.type==='sl') notes.push({ico:'🔴',priority:0,title:`${t.name}: SL kích hoạt`,desc:'Nên đóng lệnh ngay',fn:()=>{ goTab('invest',3); ivSubTab('port',null); }});
+    });
+  });
+
+  const { cash } = layerTotals();
+  [3,4,5].forEach(lid => {
+    if ((cash[lid]||0)>0) notes.push({ico:'💰',priority:1,title:`Lớp ${lid} có ${fmtPlain(cash[lid])} chưa đầu tư`,desc:'Có thể tạo kế hoạch',fn:()=>{ goTab('invest',3); ptActive(2); }});
+  });
+
+  const lastHtth = Object.keys(S.htth||{}).sort().pop();
+  const curMonth = new Date().toISOString().slice(0,7);
+  if (!lastHtth || lastHtth < curMonth) notes.push({ico:'♥',priority:2,title:'Chưa cập nhật HTTH tháng này',desc:'Cần cập nhật để theo dõi tự do TC',fn:()=>goTab('htth',8)});
+
+  const planned = trades.filter(x=>x.status==='planned');
+  if (planned.length) notes.push({ico:'📋',priority:2,title:`${planned.length} lệnh dự kiến chờ`,desc:planned.map(t=>t.name).join(', '),fn:()=>{ goTab('invest',3); ivSubTab('port',null); }});
+
+  notes.sort((a,b)=>a.priority-b.priority);
+
+  if (!notes.length) {
+    el.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--txt3);font-size:.7rem">✓ Không có đề xuất mới</div>`;
+    return;
+  }
+  el.innerHTML = notes.slice(0,5).map(n=>`
+    <div style="display:flex;gap:.6rem;padding:.55rem .65rem;
+      background:rgba(255,255,255,.02);border:1px solid var(--border);
+      border-radius:var(--rs);margin-bottom:.4rem;cursor:pointer;transition:border-color .15s"
+      onmouseover="this.style.borderColor='var(--border-h)'"
+      onmouseout="this.style.borderColor='var(--border)'"
+      onclick="(${n.fn.toString()})()">
+      <span style="font-size:.85rem;flex-shrink:0">${n.ico}</span>
+      <div>
+        <div style="font-size:.7rem;font-weight:700;color:var(--txt)">${n.title}</div>
+        <div style="font-size:.62rem;color:var(--txt3);margin-top:.1rem">${n.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+// Hook workspace render into saveS (done above)
+
 function renderDash() {
   const { t, total } = layerTotals();
   const cfg = S.cfg;
@@ -3444,6 +3999,7 @@ function renderDash() {
   renderDashFinanceTracker();
   renderLayerAllocation && renderLayerAllocation();
   buildCascadeNotifications && buildCascadeNotifications();
+  updateStatusBar && updateStatusBar();
   // Budget spending pulse on dashboard
   const bgSum = bgGetDashSummary();
   const miniEl = document.getElementById('s-budget-mini');
@@ -4250,6 +4806,54 @@ function bnActive(idx) {
   closeFab();
 }
 
+// ── Primary nav active state ──
+function ptActive(idx) {
+  document.querySelectorAll('.ptab').forEach((b,i) =>
+    b.classList.toggle('active', i === idx));
+  // Also close secondary nav when primary tab clicked
+  const snav = document.getElementById('snav');
+  if (snav) { snav.classList.remove('snav-open'); snav.classList.add('snav-hidden'); }
+}
+
+// ── Toggle secondary (all 12 tabs) nav ──
+let snavOpen = false;
+function toggleSecondaryNav() {
+  const snav = document.getElementById('snav');
+  if (!snav) return;
+  snavOpen = !snavOpen;
+  snav.classList.toggle('snav-open', snavOpen);
+  snav.classList.toggle('snav-hidden', !snavOpen);
+  const moreBtn = document.getElementById('pt-more');
+  if (moreBtn) moreBtn.style.opacity = snavOpen ? '1' : '.7';
+}
+
+// ── Status bar update (desktop fixed bottom) ──
+function updateStatusBar() {
+  const { total, cash } = layerTotals();
+  const totalCash = Object.values(cash).reduce((s,v)=>s+v,0);
+  const opens = (S.trades||[]).filter(t=>t.status==='open').length;
+
+  const sbTotal = document.getElementById('sb-total');
+  const sbCash  = document.getElementById('sb-cash');
+  const sbCs9   = document.getElementById('sb-cs9');
+  const sbTrades= document.getElementById('sb-trades');
+
+  if (sbTotal) sbTotal.textContent = fmtPlain(total);
+  if (sbCash)  sbCash.textContent  = fmtPlain(totalCash);
+  if (sbTrades)sbTrades.textContent= `${opens} lệnh`;
+
+  // CS#9 from last HTTH month
+  const months = Object.keys(S.htth||{}).sort();
+  const last = months.length ? S.htth[months[months.length-1]] : null;
+  if (sbCs9 && last) {
+    const totalInc = (last.income||[]).filter(x=>x.type==='cd').reduce((s,x)=>s+(x.val||0),0);
+    const totalExp = (last.expense||[]).reduce((s,x)=>s+(x.val||0),0);
+    const cs9 = totalExp>0 ? totalInc/totalExp*100 : 0;
+    sbCs9.textContent = cs9.toFixed(0)+'%';
+    sbCs9.style.color = cs9>=200?'var(--ok)':cs9>=89?'var(--teal)':cs9>=17?'var(--warn)':'var(--danger)';
+  } else if (sbCs9) sbCs9.textContent = '—';
+}
+
 // Close FAB on main tap
 document.addEventListener('click', e => {
   if (fabOpen && !e.target.closest('.fab-menu') && !e.target.closest('.fab')) closeFab();
@@ -4397,6 +5001,10 @@ function goTab(name, idx) {
   document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.getElementById('nt'+idx).classList.add('active');
+  // Sync primary nav active state
+  const primaryMap = {dashboard:0, input:1, invest:2, analytics:3};
+  if (primaryMap[name] !== undefined) ptActive(primaryMap[name]);
+  else { document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active')); }
   // Scroll main to top on mobile
   const main = document.querySelector('.main');
   if (main) main.scrollTo({ top:0, behavior:'smooth' });
@@ -4427,7 +5035,6 @@ function setCustomPrice() {
   const price = pNum(document.getElementById('custom-price')?.value||'0');
   if (!sym || !price) { toast('Nhập mã và giá','err'); return; }
   PRICES[sym] = { usd:0, vnd:price, manual:true };
-  updatePriceBar();
   renderJournal();
   renderCfoTable();
   toast(`Đã lưu ${sym}: ${fmtPlain(price)} ✓`);
