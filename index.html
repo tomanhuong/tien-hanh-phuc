@@ -243,15 +243,9 @@ header{
   max-width:1400px;margin:0 auto;
   padding:1.5rem 2rem 4rem;
 }
-@media(min-width:1024px){
-  #workspace{display:grid}
-  /* Hide normal single-tab view, show workspace instead for core 4 tabs */
-  body.ws-mode #tab-dashboard,
-  body.ws-mode #tab-input,
-  body.ws-mode #tab-invest,
-  body.ws-mode #tab-analytics{display:none !important}
-  body.ws-mode #workspace{display:grid !important}
-}
+/* Workspace: only shown on dashboard tab via JS class, desktop only */
+#workspace.ws-visible{display:grid}
+@media(max-width:1023px){#workspace{display:none !important}}
 .ws-panel{
   background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);
   display:flex;flex-direction:column;
@@ -3547,8 +3541,8 @@ function saveS() {
     const b = document.getElementById('save-badge');
     if (b) { b.classList.add('show'); clearTimeout(b._t); b._t = setTimeout(()=>b.classList.remove('show'), 1800); }
     updateStatusBar && updateStatusBar();
-    // Refresh workspace panels if on desktop
-    if (document.body.classList.contains('ws-mode')) {
+    // Refresh workspace panels if visible on desktop
+    if (document.getElementById('workspace')?.classList.contains('ws-visible')) {
       wsRenderDash();
       wsRenderLayers();
       wsRenderPortfolio();
@@ -3629,9 +3623,12 @@ function layerTotals() {
 // ═══════════════════════════════════════
 
 function wsInit() {
-  // Only run on desktop (CSS hides #workspace on <1024px anyway)
   if (window.innerWidth < 1024) return;
-  document.body.classList.add('ws-mode');
+  // Default landing = dashboard tab → show workspace
+  const ws = document.getElementById('workspace');
+  ws.classList.add('ws-visible');
+  // Make sure dashboard section is NOT shown (workspace replaces it)
+  document.getElementById('tab-dashboard').classList.remove('active');
   wsRender();
 }
 
@@ -3798,20 +3795,23 @@ function wsConfirmEdit(id) {
   const newVal = pNum(inp.value);
   if (!newVal || newVal < 0) { toast('Giá trị không hợp lệ','err'); return; }
   const i = S.assets.findIndex(x=>x.id===id);
-  if (i>=0) {
-    const old = S.assets[i].val;
-    S.assets[i].val = newVal; S.assets[i].date = today();
-    saveS();
-    // Update display
-    if (val) val.textContent = fmtPlain(newVal);
-    inp.classList.remove('editing');
-    val.classList.remove('editing');
-    if (btn) { btn.textContent='✎'; btn.classList.remove('save-btn'); btn.onclick=()=>wsStartEdit(id); }
-    wsRenderDash(); wsRenderCascade();
-    renderDash();
-    const diff = newVal-old;
-    toast(`${S.assets[i].name}: ${diff>=0?'+':''}${fmtPlain(diff)} ✓`);
+  if (i < 0) return;
+  const old = S.assets[i].val;
+  S.assets[i].val = newVal;
+  S.assets[i].date = today();
+  const assetName = S.assets[i].name;
+  saveS(); // this triggers wsRender via saveS hook
+
+  // Restore edit UI state
+  if (val) { val.textContent = fmtPlain(newVal); val.classList.remove('editing'); }
+  inp.classList.remove('editing');
+  if (btn) {
+    btn.textContent = '✎';
+    btn.classList.remove('save-btn');
+    btn.onclick = () => wsStartEdit(id);
   }
+  const diff = newVal - old;
+  toast(`${assetName}: ${diff>=0?'+':''}${fmtPlain(diff)} ✓`);
 }
 
 function wsCancelEdit(id) {
@@ -3825,15 +3825,21 @@ function wsCancelEdit(id) {
 
 function wsDeleteAsset(id) {
   const a = S.assets.find(x=>x.id===id);
-  if (!a || !confirm(`Xóa "${a.name}"?`)) return;
+  if (!a || !confirm(`Xóa "${a.name}" (${fmtPlain(a.val)})?`)) return;
   S.assets = S.assets.filter(x=>x.id!==id);
-  saveS(); wsRenderLayers(); wsRenderDash(); renderDash();
+  saveS(); // triggers wsRender via hook
   toast(`Đã xóa ${a.name} ✓`);
 }
 
 function wsAddAsset() {
-  goTab('input',1); ptActive(1);
-  setTimeout(()=>document.getElementById('f-name')?.focus(), 200);
+  if (window.innerWidth >= 1024) {
+    // On desktop: open input tab, after save it will auto-refresh workspace via saveS
+    goTab('input',1); ptActive(1);
+    setTimeout(()=>document.getElementById('f-name')?.focus(), 300);
+  } else {
+    goTab('input',1); ptActive(1);
+    setTimeout(()=>document.getElementById('f-name')?.focus(), 200);
+  }
 }
 
 function wsAddAssetInLayer(lid) {
@@ -3841,7 +3847,7 @@ function wsAddAssetInLayer(lid) {
   const el = document.getElementById('f-layer');
   if (el) { el.value = lid; updateCats(); }
   setAssetType('invested');
-  setTimeout(()=>document.getElementById('f-name')?.focus(), 200);
+  setTimeout(()=>document.getElementById('f-name')?.focus(), 300);
 }
 
 // Panel 3: Portfolio mini
@@ -4405,6 +4411,11 @@ function saveAsset() {
         &nbsp;·&nbsp; Tổng: <strong style="color:${l.col}">${fmtPlain(lv)}</strong> (${p}%)
       </div>
     </div>`;
+
+  // On desktop: return to workspace dashboard after 1.2s
+  if (window.innerWidth >= 1024) {
+    setTimeout(()=>goTab('dashboard',0), 1200);
+  }
 }
 
 function resetForm() {
@@ -4997,19 +5008,43 @@ function toast(msg, type='ok') {
 let jfilter = 'all';
 
 function goTab(name, idx) {
+  const isDesktop = window.innerWidth >= 1024;
+  const ws = document.getElementById('workspace');
+
+  // On desktop: Dashboard tab = show workspace, hide normal tab
+  if (isDesktop && name === 'dashboard') {
+    // Show workspace, deactivate all sections
+    document.querySelectorAll('.tsec').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('nt'+idx).classList.add('active');
+    ws.classList.add('ws-visible');
+    wsRender(); // refresh all 4 panels
+    ptActive(0);
+    closeFab();
+    window.scrollTo({top:0,behavior:'smooth'});
+    updateStatusBar && updateStatusBar();
+    return;
+  }
+
+  // All other tabs (or mobile): hide workspace, show normal tab
+  ws.classList.remove('ws-visible');
   document.querySelectorAll('.tsec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.getElementById('nt'+idx).classList.add('active');
-  // Sync primary nav active state
+
+  // Sync primary nav
   const primaryMap = {dashboard:0, input:1, invest:2, analytics:3};
   if (primaryMap[name] !== undefined) ptActive(primaryMap[name]);
-  else { document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active')); }
-  // Scroll main to top on mobile
+  else document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+
+  // Scroll to top
   const main = document.querySelector('.main');
-  if (main) main.scrollTo({ top:0, behavior:'smooth' });
-  window.scrollTo({ top:0, behavior:'smooth' });
+  if (main) main.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
   closeFab();
+
+  // Tab-specific renders
   if (name==='assets')    renderAssets();
   if (name==='dashboard') renderDash();
   if (name==='invest')    { calcInvest(); buildCascadeNotifications(); }
@@ -5021,6 +5056,7 @@ function goTab(name, idx) {
   if (name==='budget')    { renderBudget(); }
   if (name==='report')    { renderReport(); }
   if (name==='help')      { renderHelp(); }
+  if (name==='input')     { document.getElementById('f-name')?.focus(); }
 }
 
 // ═══════════════════════════════════════
