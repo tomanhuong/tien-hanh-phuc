@@ -184,53 +184,72 @@ header{
 .ibtn:hover{border-color:var(--teal);color:var(--teal)}
 .ibtn:disabled{opacity:.5;cursor:not-allowed}
 
-/* ── PRIMARY NAV — pinned horizontal 4+more tabs ── */
-.pnav{
-  position:sticky;top:var(--header-h,52px);z-index:50;
-  background:rgba(11,15,25,.97);
+/* ── LEGACY PNAV — now hidden, kept for CSS compat ── */
+.pnav{display:none !important}
+.pnav-inner{display:none}
+.ptab,.pt-ico,.pt-lbl{display:none}
+
+/* ── 2-ROW DESKTOP NAV ── */
+.dnav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(11,15,25,.98);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  padding-left:max(.5rem,var(--sal));
-  padding-right:max(.5rem,var(--sar));
 }
-.pnav-inner{
+/* Row 1 — Primary tabs (6) + app actions: slightly taller, bolder */
+.dnav-row1{
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:0 max(1.5rem, calc(var(--sal)+1rem));
+  padding-right:max(1.5rem, calc(var(--sar)+1rem));
+}
+.dnav-row1-inner{
   max-width:1400px;margin:0 auto;
-  display:flex;gap:0;
+  display:flex;align-items:stretch;height:46px;
 }
-.ptab{
-  display:flex;align-items:center;gap:.45rem;
-  padding:.75rem 1.35rem;
+.dt1{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.5rem 1.1rem;
   background:none;border:none;border-bottom:2px solid transparent;
-  font-family:'Inter',sans-serif;font-size:1rem;
-  letter-spacing:.08em;text-transform:uppercase;
+  font-family:'Inter',sans-serif;font-size:.95rem;font-weight:600;
+  letter-spacing:.03em;
   color:var(--txt3);cursor:pointer;white-space:nowrap;
   transition:color .18s,border-color .18s;
   -webkit-tap-highlight-color:transparent;
 }
-.ptab:hover{color:var(--txt2)}
-.ptab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.pt-ico{font-size:1.02rem;line-height:1;flex-shrink:0}
-.pt-lbl{font-size:1.08rem}
-@media(max-width:600px){.pt-lbl{display:none}.ptab{padding:.7rem .85rem}}
+.dt1:hover{color:var(--txt)}
+.dt1.active{color:var(--gold);border-bottom-color:var(--gold)}
+.dt1-ico{font-size:1rem;line-height:1;flex-shrink:0}
+/* Row 2 — Secondary tabs (6): compact, lighter weight */
+.dnav-row2{
+  padding:0 max(1.5rem, calc(var(--sal)+1rem));
+  padding-right:max(1.5rem, calc(var(--sar)+1rem));
+}
+.dnav-row2-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:stretch;height:36px;
+  gap:0;
+}
+.dt2{
+  display:flex;align-items:center;gap:.3rem;
+  padding:.35rem .9rem;
+  background:none;border:none;border-bottom:2px solid transparent;
+  font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;
+  letter-spacing:.03em;
+  color:var(--txt3);cursor:pointer;white-space:nowrap;
+  transition:color .18s,border-color .18s,background .18s;
+  -webkit-tap-highlight-color:transparent;
+  border-radius:var(--rs) var(--rs) 0 0;
+}
+.dt2:hover{color:var(--txt2);background:rgba(255,255,255,.04)}
+.dt2.active{color:var(--teal);border-bottom-color:var(--teal)}
+.dt2-ico{font-size:.82rem;line-height:1;flex-shrink:0;opacity:.7}
+/* Hide 2-row nav on mobile */
+@media(max-width:768px){.dnav{display:none}}
 
-/* ── SECONDARY NAV — all tabs, scrollable, toggled ── */
-.snav{
-  background:rgba(11,15,25,.92);
-  border-bottom:1px solid var(--border);
-  overflow-x:auto;
-  padding-left:max(2rem,calc(var(--sal)+1rem));
-  padding-right:max(2rem,calc(var(--sar)+1rem));
-  max-height:46px;
-  transition:max-height .22s cubic-bezier(.4,0,.2,1),opacity .18s;
-  overflow:hidden;
-}
-.snav.snav-hidden{max-height:0;opacity:0;pointer-events:none}
-.snav.snav-open{max-height:46px;opacity:1;pointer-events:all}
-/* Always hide secondary nav on mobile — bnav handles navigation */
-@media(max-width:768px){
-  .snav{display:none !important}
-  .pnav{display:none !important}
-}
+/* ── SECONDARY NAV — keep for compat (hidden always now) ── */
+.snav{display:none !important}
+.pnav{display:none !important}
+.snav.snav-hidden,.snav.snav-open{display:none !important}
 .nav-inner{max-width:1400px;margin:0 auto;display:flex}
 .ntab{padding:.78rem 1.25rem;font-family:'Inter',sans-serif;font-size:1.08rem;
   letter-spacing:.08em;text-transform:uppercase;color:var(--txt3);cursor:pointer;
@@ -1625,29 +1644,60 @@ input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(240,192,
     </div>
   </header>
 
-  <!-- PRIMARY NAV — 4 core + More, always pinned horizontal -->
-  <div class="pnav" id="pnav">
-    <div class="pnav-inner">
-      <button class="ptab active" id="pt0" onclick="goTab('dashboard',0);ptActive(0)">
-        <span class="pt-ico">⬡</span><span class="pt-lbl">Dashboard</span>
-      </button>
-      <button class="ptab" id="pt1" onclick="goTab('input',1);ptActive(1)">
-        <span class="pt-ico">＋</span><span class="pt-lbl">Nhập liệu</span>
-      </button>
-      <button class="ptab" id="pt2" onclick="goTab('invest',3);ptActive(2)">
-        <span class="pt-ico">◈</span><span class="pt-lbl">Đầu tư</span>
-      </button>
-      <button class="ptab" id="pt3" onclick="goTab('analytics',5);ptActive(3)">
-        <span class="pt-ico">⟁</span><span class="pt-lbl">Phân tích</span>
-      </button>
-      <button class="ptab" id="pt-more" onclick="toggleSecondaryNav()">
-        <span class="pt-ico">···</span><span class="pt-lbl">Thêm</span>
-      </button>
+  <!-- 2-ROW DESKTOP NAV — always visible, hidden on mobile (bnav takes over) -->
+  <div class="dnav" id="dnav">
+
+    <!-- Row 1: Core 6 tabs — bold, gold active indicator -->
+    <div class="dnav-row1">
+      <div class="dnav-row1-inner">
+        <button class="dt1 active" id="dt1-0" onclick="goTab('dashboard',0);d1Active(0)">
+          <span class="dt1-ico">⬡</span> Dashboard
+        </button>
+        <button class="dt1" id="dt1-1" onclick="goTab('input',1);d1Active(1)">
+          <span class="dt1-ico">＋</span> Nhập liệu
+        </button>
+        <button class="dt1" id="dt1-2" onclick="goTab('assets',2);d1Active(2)">
+          <span class="dt1-ico">◉</span> Tài sản
+        </button>
+        <button class="dt1" id="dt1-3" onclick="goTab('invest',3);d1Active(3)">
+          <span class="dt1-ico">◈</span> Đầu tư
+        </button>
+        <button class="dt1" id="dt1-4" onclick="goTab('analytics',5);d1Active(4)">
+          <span class="dt1-ico">⟁</span> Phân tích
+        </button>
+        <button class="dt1" id="dt1-5" onclick="goTab('budget',9);d1Active(5)">
+          <span class="dt1-ico">🫙</span> Ngân sách
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 2: Secondary 6 tabs — lighter, teal active indicator -->
+    <div class="dnav-row2">
+      <div class="dnav-row2-inner">
+        <button class="dt2" id="dt2-0" onclick="goTab('journal',4);d2Active(0)">
+          <span class="dt2-ico">📋</span> Nhật ký lệnh
+        </button>
+        <button class="dt2" id="dt2-1" onclick="goTab('htth',8);d2Active(1)">
+          <span class="dt2-ico">♥</span> Hệ Tuần Hoàn
+        </button>
+        <button class="dt2" id="dt2-2" onclick="goTab('goals',6);d2Active(2)">
+          <span class="dt2-ico">🎯</span> Mục tiêu
+        </button>
+        <button class="dt2" id="dt2-3" onclick="goTab('sim',7);d2Active(3)">
+          <span class="dt2-ico">🔮</span> Kịch bản
+        </button>
+        <button class="dt2" id="dt2-4" onclick="goTab('report',10);d2Active(4)">
+          <span class="dt2-ico">📊</span> Báo cáo
+        </button>
+        <button class="dt2" id="dt2-5" onclick="goTab('help',11);d2Active(5)">
+          <span class="dt2-ico">❓</span> Hướng dẫn
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- SECONDARY NAV — all 12 tabs, scrollable, collapses by default on desktop -->
-  <nav id="snav" class="snav snav-hidden">
+  <!-- HIDDEN LEGACY NAV — kept for JS compat (nt0-nt11 IDs) -->
+  <nav id="snav" class="snav snav-hidden" style="display:none!important">
     <div class="nav-inner">
       <div class="ntab active" id="nt0" onclick="goTab('dashboard',0)">Dashboard</div>
       <div class="ntab" id="nt1" onclick="goTab('input',1)">Nhập liệu</div>
@@ -4952,24 +5002,23 @@ function bnActive(idx) {
 
 // ── Primary nav active state ──
 function ptActive(idx) {
-  document.querySelectorAll('.ptab').forEach((b,i) =>
-    b.classList.toggle('active', i === idx));
-  // Also close secondary nav when primary tab clicked
-  const snav = document.getElementById('snav');
-  if (snav) { snav.classList.remove('snav-open'); snav.classList.add('snav-hidden'); }
+  // Legacy — map to d1Active where possible
+  const map = [0,1,2,3,4,5]; // pt0→dt1-0, pt1→dt1-1, etc.
+  d1Active(map[idx] ?? 0);
 }
 
-// ── Toggle secondary (all 12 tabs) nav ──
-let snavOpen = false;
-function toggleSecondaryNav() {
-  const snav = document.getElementById('snav');
-  if (!snav) return;
-  snavOpen = !snavOpen;
-  snav.classList.toggle('snav-open', snavOpen);
-  snav.classList.toggle('snav-hidden', !snavOpen);
-  const moreBtn = document.getElementById('pt-more');
-  if (moreBtn) moreBtn.style.opacity = snavOpen ? '1' : '.7';
+function d1Active(idx) {
+  document.querySelectorAll('.dt1').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.dt2').forEach(b => b.classList.remove('active'));
 }
+
+function d2Active(idx) {
+  document.querySelectorAll('.dt2').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.dt1').forEach(b => b.classList.remove('active'));
+}
+
+// Legacy — no-op
+function toggleSecondaryNav() {}
 
 // ── Status bar update (desktop fixed bottom) ──
 function updateStatusBar() {
@@ -5151,8 +5200,8 @@ function goTab(name, idx) {
     document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
     document.getElementById('nt'+idx).classList.add('active');
     ws.classList.add('ws-visible');
-    wsRender(); // refresh all 4 panels
-    ptActive(0);
+    wsRender();
+    d1Active(0);
     closeFab();
     window.scrollTo({top:0,behavior:'smooth'});
     updateStatusBar && updateStatusBar();
@@ -5166,10 +5215,12 @@ function goTab(name, idx) {
   document.getElementById('tab-'+name).classList.add('active');
   document.getElementById('nt'+idx).classList.add('active');
 
-  // Sync primary nav
-  const primaryMap = {dashboard:0, input:1, invest:2, analytics:3};
-  if (primaryMap[name] !== undefined) ptActive(primaryMap[name]);
-  else document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+  // Sync nav rows — row1: dashboard,input,assets,invest,analytics,budget | row2: journal,htth,goals,sim,report,help
+  const r1map = {dashboard:0,input:1,assets:2,invest:3,analytics:4,budget:5};
+  const r2map = {journal:0,htth:1,goals:2,sim:3,report:4,help:5};
+  if (r1map[name] !== undefined) d1Active(r1map[name]);
+  else if (r2map[name] !== undefined) d2Active(r2map[name]);
+  else { document.querySelectorAll('.dt1,.dt2').forEach(b=>b.classList.remove('active')); }
 
   // Scroll to top
   const main = document.querySelector('.main');
