@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:15px;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+html{font-size:16px;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 
 /* ── BODY & UNIVERSE BG ── */
 body{
@@ -978,51 +978,125 @@ input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(240,192,
 .chart-wrap-sim{position:relative;height:280px;margin-top:.75rem}
 @media(max-width:900px){.simgrid{grid-template-columns:1fr}}
 
-/* ── HỆ TUẦN HOÀN ── */
-.htth-top{display:grid;grid-template-columns:1fr auto 1fr;gap:1.25rem;align-items:start;margin-bottom:1.25rem}
-.htth-bot{display:grid;grid-template-columns:1fr auto 1fr;gap:1.25rem;align-items:start;margin-bottom:1.5rem}
-.heart-center{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:.5rem;gap:.45rem;min-width:84px}
-.heart-pulse{width:48px;height:48px;display:flex;align-items:center;justify-content:center;
-  border-radius:50%;background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.3);font-size:1.3rem;
-  animation:hpulse 2.2s ease-in-out infinite}
+/* ══ HỆ TUẦN HOÀN — redesigned ══ */
+/* Top bar */
+.htth-bar{
+  display:flex;align-items:center;gap:.65rem;margin-bottom:1.5rem;
+  flex-wrap:wrap;padding:.85rem 1.1rem;
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);
+}
+.month-badge{display:flex;align-items:center;gap:.5rem;background:rgba(240,192,64,.06);
+  border:1px solid rgba(240,192,64,.2);border-radius:var(--rs);padding:.4rem .85rem}
+.mlabel{font-size:.62rem;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em}
+.mval{font-size:.92rem;font-weight:600;color:var(--gold);font-family:'Plus Jakarta Sans',sans-serif}
+
+/* 4-chamber grid: 2×2 */
 @keyframes hpulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.3)}55%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
-.heart-lbl{font-size:.67rem;color:rgba(239,68,68,.55);text-align:center;letter-spacing:.08em;line-height:1.4}
-.chamber{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;transition:border-color .2s}
+.htth-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin-bottom:1.25rem;
+}
+@media(max-width:640px){.htth-grid{grid-template-columns:1fr}}
+
+/* Each chamber */
+.chamber{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+  transition:border-color .2s;
+}
+.chamber:hover{border-color:var(--border-h)}
 .chamber.asset  {border-top:3px solid var(--teal)}
 .chamber.income {border-top:3px solid var(--ok)}
 .chamber.debt   {border-top:3px solid var(--danger)}
 .chamber.expense{border-top:3px solid var(--warn)}
-.ch-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;gap:.5rem}
-.ch-title{font-size:1.02rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+
+/* Chamber header */
+.ch-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 1rem .65rem;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  background:rgba(255,255,255,.015);
+}
+.ch-head-left{display:flex;align-items:center;gap:.55rem}
+.ch-icon{font-size:1.1rem;opacity:.85}
+.ch-title{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .ch-title.asset{color:var(--teal)}.ch-title.income{color:var(--ok)}
 .ch-title.debt{color:var(--danger)}.ch-title.expense{color:var(--warn)}
-.ch-total{font-family:Arial,sans-serif;font-size:1.2rem;font-weight:600}
-.ch-items{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.75rem;max-height:220px;overflow-y:auto}
-.ch-item{display:grid;grid-template-columns:1fr auto 120px auto;gap:.4rem;align-items:center;
-  padding:.32rem .45rem;background:rgba(255,255,255,.02);border-radius:4px;border:1px solid rgba(255,255,255,.04)}
-.ch-item-name{font-size:1.08rem;color:var(--txt2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.itag{font-size:.54rem;padding:.1rem .38rem;border-radius:3px;font-weight:700;letter-spacing:.03em;flex-shrink:0;white-space:nowrap}
+.ch-total{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;font-weight:700;
+}
+
+/* Items list */
+.ch-items{
+  padding:.65rem .85rem;
+  display:flex;flex-direction:column;gap:.3rem;
+  min-height:80px;max-height:200px;overflow-y:auto;
+}
+.ch-item{
+  display:grid;grid-template-columns:1fr auto 105px auto;
+  gap:.4rem;align-items:center;
+  padding:.32rem .5rem;
+  background:rgba(255,255,255,.02);
+  border-radius:5px;border:1px solid rgba(255,255,255,.04);
+  transition:background .15s;
+}
+.ch-item:hover{background:rgba(255,255,255,.04)}
+.ch-item-name{
+  font-size:.78rem;color:var(--txt2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;
+}
+.itag{
+  font-size:.58rem;padding:.1rem .4rem;border-radius:3px;
+  font-weight:700;letter-spacing:.04em;flex-shrink:0;white-space:nowrap;
+}
 .tag-cd{background:rgba(45,212,191,.12);color:var(--teal)}
 .tag-td{background:rgba(16,185,129,.12);color:var(--ok)}
-.ch-val-inp{width:100%;padding:.28rem .45rem;background:rgba(255,255,255,.04);border:1px solid var(--border);
-  border-radius:4px;color:var(--txt);font-family:Arial,sans-serif;font-size:.98rem;text-align:right;
-  outline:none;transition:border-color .18s}
+.ch-val-inp{
+  width:100%;padding:.25rem .4rem;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:4px;color:var(--txt);
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;
+  text-align:right;outline:none;transition:border-color .18s;
+}
 .ch-val-inp:focus{border-color:var(--gold)}
-.ch-del{background:none;border:none;color:rgba(255,255,255,.15);cursor:pointer;font-size:.98rem;
-  padding:.1rem .2rem;line-height:1;transition:color .15s;flex-shrink:0}
+.ch-del{
+  background:none;border:none;color:rgba(255,255,255,.15);
+  cursor:pointer;font-size:.85rem;padding:.15rem .2rem;
+  line-height:1;transition:color .15s;flex-shrink:0;
+}
 .ch-del:hover{color:var(--danger)}
-.ch-add-row{display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap}
-.ch-add-row input,.ch-add-row select{padding:.32rem .5rem;background:rgba(255,255,255,.03);
-  border:1px solid var(--border);border-radius:4px;color:var(--txt2);
-  font-family:Arial,sans-serif;font-size:1.08rem;outline:none;transition:border-color .15s}
+
+/* Add row */
+.ch-add-row{
+  display:flex;gap:.35rem;padding:.55rem .85rem .75rem;
+  border-top:1px solid rgba(255,255,255,.04);flex-wrap:wrap;
+}
+.ch-add-row input,.ch-add-row select{
+  padding:.35rem .55rem;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:5px;color:var(--txt2);
+  font-family:'DM Sans','Plus Jakarta Sans',sans-serif;font-size:.78rem;
+  outline:none;transition:border-color .15s;
+}
 .ch-add-row input:focus,.ch-add-row select:focus{border-color:var(--teal)}
 .ch-add-row input{flex:1;min-width:80px}
-.ch-add-row select{flex-shrink:0}
-.ch-add-row button{padding:.32rem .65rem;background:transparent;border:1px solid var(--border);
-  border-radius:4px;color:var(--txt3);font-family:Arial,sans-serif;font-size:1.05rem;
-  cursor:pointer;white-space:nowrap;transition:all .15s}
+.ch-add-row select{flex-shrink:0;max-width:130px}
+.ch-add-row button{
+  padding:.35rem .7rem;background:transparent;
+  border:1px solid var(--border);border-radius:5px;
+  color:var(--txt3);font-size:.75rem;cursor:pointer;
+  white-space:nowrap;transition:all .15s;
+}
 .ch-add-row button:hover{border-color:var(--teal);color:var(--teal)}
+.custom-opt-wrap{display:none;width:100%;display:flex;gap:.35rem;margin-top:.3rem}
+/* CS indicators strip */
+.htth-cs-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;
+  margin-bottom:1.25rem;
+}
+@media(max-width:640px){.htth-cs-strip{grid-template-columns:1fr 1fr}}
 
 /* Month selector & save bar */
 .htth-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
@@ -2010,109 +2084,129 @@ input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 4px rgba(240,192,
 
     <section id="tab-htth" class="tsec">
 
-      <!-- Top bar: month picker + save button -->
+      <!-- Top bar -->
       <div class="htth-bar">
         <div class="month-badge">
-          <div class="mlabel">Kỳ ghi nhận</div>
-          <div class="mval" id="htth-month-lbl">—</div>
+          <div>
+            <div class="mlabel">Kỳ ghi nhận</div>
+            <div class="mval" id="htth-month-lbl">—</div>
+          </div>
         </div>
-        <input class="fi" type="month" id="htth-month" style="width:160px"
+        <input class="fi" type="month" id="htth-month" style="width:150px;font-size:.85rem"
           onchange="htthChangeMonth()">
-        <button class="pbtn" onclick="htthSave()">💾 Lưu kỳ này</button>
-        <button class="ibtn" onclick="htthCopyPrev()" title="Sao chép danh mục từ tháng trước">
-          ⎘ Tháng trước
-        </button>
-        <button class="ibtn" onclick="htthPrefillFromTower()" title="Đồng bộ CS#1 từ Tháp Tài Sản">
-          ⬡ Đồng bộ Tháp→CS#1
-        </button>
-        <span id="htth-sync-badge" style="font-size:1.05rem;padding:.2rem .65rem;border-radius:12px;
+        <button class="pbtn btn-sm" onclick="htthSave()">💾 Lưu</button>
+        <button class="ibtn" onclick="htthCopyPrev()" title="Sao chép từ tháng trước">⎘ Tháng trước</button>
+        <button class="ibtn" onclick="htthPrefillFromTower()" title="Đồng bộ từ Tháp Tài Sản">⬡ Đồng bộ Tháp</button>
+        <span id="htth-sync-badge" style="font-size:.75rem;padding:.2rem .6rem;border-radius:10px;
           border:1px solid var(--border);color:var(--txt3)"></span>
-        <span style="margin-left:auto;font-size:1.08rem;color:var(--txt3)" id="htth-saved-lbl"></span>
+        <span style="margin-left:auto;font-size:.75rem;color:var(--txt3)" id="htth-saved-lbl"></span>
       </div>
 
-      <!-- 4 Chambers — top row: Assets | ♥ | Income -->
-      <div class="htth-top">
+      <!-- CS#9 Freedom Index banner -->
+      <div id="htth-cs9-banner" style="display:flex;align-items:center;gap:1rem;
+        padding:.85rem 1.25rem;background:var(--bg-card);
+        border:1px solid var(--border);border-radius:var(--r);
+        margin-bottom:1.25rem">
+        <div style="width:44px;height:44px;border-radius:50%;
+          background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.3);
+          display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+          flex-shrink:0;animation:hpulse 2.2s ease-in-out infinite">♥</div>
+        <div style="flex:1">
+          <div style="font-size:.65rem;color:var(--txt3);text-transform:uppercase;
+            letter-spacing:.1em;margin-bottom:.2rem">Chỉ số Tự Do Tài Chính — CS#9</div>
+          <div style="font-size:.78rem;color:var(--txt2)">
+            TN thụ động ÷ Chi phí &nbsp;·&nbsp;
+            <span style="color:var(--txt3)">≥100% = Tự do tài chính</span>
+          </div>
+        </div>
+        <div id="htth-cs9-center" style="font-family:'Plus Jakarta Sans',sans-serif;
+          font-size:1.8rem;font-weight:700;color:var(--gold);text-align:right">—</div>
+      </div>
+
+      <!-- 4 chambers in 2×2 grid -->
+      <div class="htth-grid">
+
+        <!-- ① TÀI SẢN -->
         <div class="chamber asset" id="ch-asset">
           <div class="ch-head">
-            <span class="ch-title asset">① Tài Sản</span>
+            <div class="ch-head-left">
+              <span class="ch-icon">🏦</span>
+              <span class="ch-title asset">① Tài sản</span>
+            </div>
             <span class="ch-total" id="ch-asset-total" style="color:var(--teal)">—</span>
           </div>
           <div class="ch-items" id="ch-asset-items"></div>
           <div class="ch-add-row">
             <input type="text" id="ci-asset-name" placeholder="Tên tài sản…">
-            <button onclick="chAddItem('asset')">+ Thêm</button>
+            <button onclick="chAddItem('asset')">＋ Thêm</button>
           </div>
         </div>
 
-        <div class="heart-center">
-          <div class="heart-pulse">♥</div>
-          <div class="heart-lbl">Hệ Tuần<br>Hoàn</div>
-          <div class="heart-lbl" style="color:var(--teal);font-size:1.05rem" id="htth-cs1-tiny"></div>
-        </div>
-
+        <!-- ② THU NHẬP -->
         <div class="chamber income" id="ch-income">
           <div class="ch-head">
-            <span class="ch-title income">② Thu Nhập</span>
+            <div class="ch-head-left">
+              <span class="ch-icon">💵</span>
+              <span class="ch-title income">② Thu nhập</span>
+            </div>
             <span class="ch-total" id="ch-income-total" style="color:var(--ok)">—</span>
           </div>
           <div class="ch-items" id="ch-income-items"></div>
           <div class="ch-add-row">
-            <input type="text" id="ci-income-name" placeholder="Tên nguồn thu…">
-            <select id="ci-income-type">
-              <option value="cd">[CĐ] Chủ động</option>
-              <option value="td">[TĐ] Thụ động</option>
+            <input type="text" id="ci-income-name" placeholder="Nguồn thu…">
+            <select id="ci-income-type" style="font-size:.75rem">
+              <option value="cd">Chủ động</option>
+              <option value="td">Thụ động</option>
             </select>
-            <button onclick="chAddItem('income')">+ Thêm</button>
+            <button onclick="chAddItem('income')">＋ Thêm</button>
           </div>
         </div>
-      </div>
 
-      <!-- Bottom row: Debt | (center placeholder) | Expense -->
-      <div class="htth-bot">
+        <!-- ③ NỢ -->
         <div class="chamber debt" id="ch-debt">
           <div class="ch-head">
-            <span class="ch-title debt">③ Nợ</span>
+            <div class="ch-head-left">
+              <span class="ch-icon">📋</span>
+              <span class="ch-title debt">③ Nợ phải trả</span>
+            </div>
             <span class="ch-total" id="ch-debt-total" style="color:var(--danger)">—</span>
           </div>
           <div class="ch-items" id="ch-debt-items"></div>
           <div class="ch-add-row">
-            <input type="text" id="ci-debt-name" placeholder="Tên khoản nợ…">
-            <button onclick="chAddItem('debt')">+ Thêm</button>
+            <input type="text" id="ci-debt-name" placeholder="Khoản nợ…">
+            <button onclick="chAddItem('debt')">＋ Thêm</button>
           </div>
         </div>
 
-        <div class="heart-center">
-          <div style="width:48px;height:48px;border-radius:50%;background:rgba(45,212,191,.08);
-            border:1.5px dashed rgba(45,212,191,.25);display:flex;align-items:center;
-            justify-content:center;font-size:.74rem;color:rgba(45,212,191,.4);text-align:center;
-            line-height:1.3;padding:4px">CS#9<br>Tự do</div>
-          <div class="heart-lbl" id="htth-cs9-center" style="color:var(--gold);font-size:1.02rem;font-weight:700">—</div>
-        </div>
-
+        <!-- ④ CHI PHÍ -->
         <div class="chamber expense" id="ch-expense">
           <div class="ch-head">
-            <span class="ch-title expense">④ Chi Phí</span>
+            <div class="ch-head-left">
+              <span class="ch-icon">🛒</span>
+              <span class="ch-title expense">④ Chi phí</span>
+            </div>
             <span class="ch-total" id="ch-expense-total" style="color:var(--warn)">—</span>
           </div>
           <div class="ch-items" id="ch-expense-items"></div>
           <div class="ch-add-row">
-            <input type="text" id="ci-expense-name" placeholder="Tên khoản chi…">
-            <select id="ci-expense-cat" onchange="expCatChange(this)">
-              <option value="essential">Chi thiết yếu</option>
+            <input type="text" id="ci-expense-name" placeholder="Khoản chi…">
+            <select id="ci-expense-cat" onchange="expCatChange(this)" style="font-size:.75rem">
+              <option value="essential">Thiết yếu</option>
               <option value="leisure">Vui chơi</option>
               <option value="learning">Học tập</option>
               <option value="invest">Mua tài sản</option>
               <option value="other">Khác</option>
-              <option value="__custom__">✎ Tự nhập...</option>
+              <option value="__custom__">✎ Tự nhập…</option>
             </select>
-            <div class="custom-opt-wrap" id="ci-expense-cat-custom" style="margin-top:.3rem">
+            <div class="custom-opt-wrap" id="ci-expense-cat-custom" style="margin-top:.3rem;display:none">
               <input class="fi" type="text" id="ci-expense-cat-text" placeholder="Tên danh mục…">
               <button onclick="saveCustomCat('ci-expense-cat','ci-expense-cat-text','ci-expense-cat-custom')">Lưu</button>
             </div>
-            <button onclick="chAddItem('expense')">+ Thêm</button>
+            <button onclick="chAddItem('expense')">＋ Thêm</button>
           </div>
         </div>
-      </div>
+
+      </div><!-- /htth-grid -->
 
       <!-- 9 Key Indicators -->
       <div class="cs-wrap">
