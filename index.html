@@ -187,6 +187,9 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
 .dm-thanh .tren span:nth-child(2){margin-left:auto;font-size:.9rem}
 .so-do{width:100%;height:auto;display:block;margin:6px 0;font-family:var(--mono)}
 .ghi-chu-nho{font-size:.88rem;color:var(--txt3)}
+.nx-buoc{margin:0 0 10px 18px;line-height:1.7}.nx-giai{margin:6px 0 0 18px;line-height:1.6}
+.nx-cach{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.nx-cach select{flex:1;min-width:140px;padding:6px 8px;font-size:.85rem}
+.nx-nhom summary{cursor:pointer;list-style:none;padding:2px 0}.nx-nhom summary::-webkit-details-marker{display:none}
 .nut-quay{padding:7px 11px;border-radius:9px;background:var(--card);border:1px solid var(--line);font-size:12px;margin-bottom:10px;color:var(--txt2)}
 
 /* ── Tháp tài sản ── */
@@ -321,9 +324,10 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
           <div class="loi" id="s2-loi"></div>
           <button class="nut-chinh" id="s2-luu" style="margin-top:6px">Lưu thông tin sổ</button>
         </div>
+        <div class="banner ngoc"><span class="chu">📥 Nhiều ví, tài sản? Điền một file Excel rồi tải lên, khỏi gõ từng ô.</span><button data-menu="nhapexcel">Nhập Excel ›</button></div>
         <div class="the">
           <h2><span class="buoc">2</span>Ví và số dư đầu kỳ<button class="nut-them phai" data-them-vi>＋ Thêm ví</button></h2>
-          <p class="mo-ta" style="margin-bottom:6px">Mọi nơi đang giữ tiền: tiền mặt, tài khoản ngân hàng, tiền trong tài khoản chứng khoán, ví điện tử, sổ tiết kiệm.</p>
+          <p class="mo-ta" style="margin-bottom:6px">Mọi nơi đang giữ tiền: tiền mặt, tài khoản ngân hàng, ví điện tử, sổ tiết kiệm. Chứng khoán khai ở tài sản lớp 4.</p>
           <div data-ds-vi></div>
         </div>
         <div class="the">
@@ -447,6 +451,8 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
         <div class="thap" id="s10-thap"></div>
         <details><summary class="ghi-chu-nho" style="cursor:pointer">ⓘ Đọc tháp thế nào?</summary><p class="ghi-chu-nho" style="margin-top:4px" id="s10-chu-thich"></p></details>
         <button class="nut-chinh" data-di="chiatien">Chia tiền mới vào tháp</button>
+        <button class="nut-vien an" id="s10-gia-dv">🏷 Cập nhật giá vàng (theo chỉ)</button>
+        <button class="nut-vien" data-menu="nhapexcel" data-chi-qt>📥 Cập nhật số từ Excel</button>
       </div>
       <div class="banner vang an" id="s10-dinh-gia"><span class="chu" id="s10-dinh-gia-chu"></span><button id="s10-loc-dg">Xem</button></div>
       <div class="chip" id="s11-loc"></div>
@@ -562,6 +568,28 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
         <p class="ghi-chu-nho" style="margin:-6px 0 8px">Một tệp Excel 4 trang: Giao dịch · Tài sản · Khoản nợ · Chỉ số theo tháng. Dữ liệu gốc vẫn nằm trong Google Sheet của anh.</p>
         <button class="nut-vien" style="margin-top:0" id="s23-xuat">Tải bảng tính (.xlsx)</button></div>
     </section>
+    <!-- Nhập Excel: ví, tài sản, nợ một lần -->
+    <section class="man" id="man-nhapexcel">
+      <div id="nx-vo" class="the an"><h2>Nhập Excel</h2><p class="mo-ta">Ví, tài sản, nợ do chồng (quản trị) khai. Vợ nhờ chồng tải file lên.</p></div>
+      <div id="nx-qt">
+        <div class="the"><h2>Cập nhật ví, tài sản, nợ bằng một file</h2>
+          <ol class="nx-buoc"><li><b>Tải file mẫu</b>: đã điền sẵn ví, tài sản đang có.</li><li><b>Sửa số</b> bằng Excel hoặc Google Sheets, lưu lại.</li><li><b>Chọn file</b> → xem trước → <b>Áp dụng</b>.</li></ol>
+          <button class="nut-vien" id="nx-mau">⬇ Tải file mẫu (.xlsx)</button>
+          <input type="file" id="nx-tep" class="an" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+          <button class="nut-chinh" id="nx-chon">Chọn file đã điền…</button>
+          <details><summary class="ghi-chu-nho" style="cursor:pointer;margin-top:10px">ⓘ App xử lý số trong file thế nào?</summary>
+            <ul class="ghi-chu-nho nx-giai">
+              <li><b>Tên mới</b> → thêm ví, tài sản, nợ mới.</li>
+              <li><b>Ví</b>: số dư là tiền thật. Lệch với sổ → ghi một khoản <i>Chênh lệch chưa rõ</i> cho khớp.</li>
+              <li><b>Tài sản</b> đổi giá → ghi định giá lại. Vàng có số chỉ + giá 1 chỉ thì app tự nhân.</li>
+              <li><b>Cho mượn</b> tăng, giảm → anh chọn tiền ra, về ví nào; app ghi cho vay hoặc thu nợ.</li>
+              <li><b>Chứng khoán</b>: mỗi sàn một tài sản lớp 4, giá trị = cổ phiếu đang có trên sàn.</li>
+              <li>Khoản có trong app mà không có trong file: <b>giữ nguyên</b>.</li></ul></details>
+        </div>
+        <div id="nx-xem"></div>
+        <button class="nut-phu an" id="nx-ve">‹ Về Thiết lập sổ</button>
+      </div>
+    </section>
     <!-- Hướng dẫn sử dụng (v2: đi theo dòng chảy cho người mới) -->
     <section class="man" id="man-huongdan">
       <div class="the hd-dau">
@@ -588,15 +616,17 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
           </details>
           <details class="hd-buoc" id="hd-b3" data-buoc="3"><summary><span class="hd-so" data-hd-so="3">3</span><span>Tạo ví: mọi nơi đang giữ tiền<small>Chồng</small></span></summary>
             <p class="hd-vi"><b>Vì sao:</b> Mỗi khoản chi, thu phải nói tiền ra, vào <b>ví nào</b>. Nhờ vậy app tự tính số dư từng ví, biết tiền đang nằm đâu, và sau này so được với tiền thật để bắt khoản quên ghi. Tổng tiền trong ví cũng là quỹ khẩn cấp của nhà mình.</p>
-            <ol><li>Ở khối <b>2 · Ví và số dư đầu kỳ</b> bấm <b>＋ Thêm ví</b>. (Sổ đã dùng rồi: tab <b>Tài sản</b> → <b>＋ Ví</b>.)</li><li><b>Tên ví</b>: tên dễ nhận ra, VD "Techcombank chồng", "Tiền mặt vợ".</li><li><b>Loại</b>: Tiền mặt, Ngân hàng, Tài khoản chứng khoán, Ví điện tử hoặc Tiết kiệm. <b>Của</b>: Chồng, Vợ hoặc Chung.</li><li><b>Số dư đầu kỳ</b>: số tiền thật trong ví <b>vào ngày bắt đầu sổ</b> (xem app ngân hàng, đếm tiền mặt). Ví trống thì nhập 0.</li><li>Bấm <b>Lưu</b>. Làm lại cho từng ví: mỗi tài khoản ngân hàng, tiền mặt của mỗi người, ví điện tử, sổ tiết kiệm.</li></ol>
-            <div class="hd-them">Sổ tiết kiệm khai là <b>ví</b> (loại Tiết kiệm), không khai ở tài sản. Thiếu ví nào cũng được thêm sau.</div>
+            <ol><li>Ở khối <b>2 · Ví và số dư đầu kỳ</b> bấm <b>＋ Thêm ví</b>. (Sổ đã dùng rồi: tab <b>Tài sản</b> → <b>＋ Ví</b>.)</li><li><b>Tên ví</b>: tên dễ nhận ra, VD "Techcombank chồng", "Tiền mặt vợ".</li><li><b>Loại</b>: Tiền mặt, Ngân hàng, Ví điện tử hoặc Tiết kiệm. <b>Của</b>: Chồng, Vợ hoặc Chung.</li><li><b>Số dư đầu kỳ</b>: số tiền thật trong ví <b>vào ngày bắt đầu sổ</b> (xem app ngân hàng, đếm tiền mặt). Ví trống thì nhập 0.</li><li>Bấm <b>Lưu</b>. Làm lại cho từng ví: mỗi tài khoản ngân hàng, tiền mặt của mỗi người, ví điện tử, sổ tiết kiệm.</li></ol>
+            <div class="hd-them">📥 <b>Nhiều ví? Nhanh hơn:</b> bấm banner <b>Nhập Excel ›</b> → tải file mẫu → điền số dư → tải lên → <b>Áp dụng</b>. Một file khai luôn cả tài sản (bước 4).</div>
+            <div class="hd-them">Sổ tiết kiệm khai là <b>ví</b> (loại Tiết kiệm). Chứng khoán khai ở <b>tài sản lớp 4</b>, không khai ví tiền chờ. Thiếu ví nào cũng được thêm sau.</div>
             <p class="hd-xong">✅ <b>Xong khi thấy:</b> mỗi ví một dòng kèm số dư bên phải.</p>
             <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="vi">Tạo ví ›</button><button class="nut-nho" data-hd-mo="4">Tiếp: 4 · Khai tài sản và nợ (bỏ qua được) ›</button></div>
           </details>
           <details class="hd-buoc" id="hd-b4" data-buoc="4"><summary><span class="hd-so" data-hd-so="4">4</span><span>Khai tài sản và nợ (bỏ qua được)<small>Chồng</small></span></summary>
             <p class="hd-vi"><b>Vì sao:</b> Để app tính <b>Của cải thật</b> (có − nợ), vẽ <b>tháp tài sản</b>, và chấm 2 ngăn Nợ, Tài sản. Chưa khai thì 2 ngăn này hiện xám.</p>
             <ol><li>Ở khối <b>3 · Tài sản và nợ</b> bấm <b>＋ Tài sản</b>: tên, <b>lớp tháp</b> (bảng bên dưới), giá trị tại ngày bắt đầu sổ → <b>Lưu</b>.</li><li>Tiền cho người khác vay: <b>Kiểu</b> = <i>Cho vay (phải thu)</i>.</li><li>Bấm <b>＋ Khoản nợ</b>: tên, gốc còn nợ tại ngày bắt đầu, lãi suất %/năm, trả dự kiến mỗi tháng → <b>Lưu</b>.</li><li>Bấm <b>Xong, vào sổ</b> (cần ít nhất 1 ví).</li></ol>
-            <div class="hd-them"><table class="bang"><tr><td>2 · Bảo vệ</td><td>vàng, ngoại tệ, cho vay, bảo hiểm tích luỹ</td></tr><tr><td>3 · Tạo thu nhập</td><td>cổ phần có cổ tức, nhà cho thuê, trái phiếu</td></tr><tr><td>4 · Tăng trưởng</td><td>cổ phiếu, ETF, đất để lâu</td></tr><tr><td>5 · Mạo hiểm</td><td>tiền điện tử, phái sinh</td></tr><tr><td>1 · Vô hình</td><td>kiến thức, sức khoẻ (không cộng vào tổng)</td></tr></table></div>
+            <div class="hd-them">📥 Đã điền file Excel ở bước 3 thì tài sản, nợ vào luôn; chỉ cần bấm <b>Xong, vào sổ</b>.</div>
+            <div class="hd-them"><table class="bang"><tr><td>2 · Bảo vệ</td><td>vàng, ngoại tệ, cho vay, bảo hiểm tích luỹ</td></tr><tr><td>3 · Tạo thu nhập</td><td>cổ phần có cổ tức, nhà cho thuê, trái phiếu</td></tr><tr><td>4 · Tăng trưởng</td><td>cổ phiếu (mỗi sàn một dòng, giá trị cổ phiếu trên sàn), ETF, đất để lâu</td></tr><tr><td>5 · Mạo hiểm</td><td>tiền điện tử, phái sinh</td></tr><tr><td>1 · Vô hình</td><td>kiến thức, sức khoẻ (không cộng vào tổng)</td></tr></table></div>
             <p class="hd-xong">✅ <b>Xong khi thấy:</b> màn <b>Nhà mình</b> có 4 ô ngăn và số <b>Của cải thật</b>.</p>
             <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="xong">Khai tài sản ›</button><button class="nut-nho" data-hd-mo="5">Tiếp: 5 · Mời vợ cùng ghi ›</button></div>
           </details>
@@ -628,7 +658,7 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
           <details class="hd-buoc" id="hd-b8" data-buoc="8"><summary><span class="hd-so" data-hd-so="8">8</span><span>Đối soát ví</span></summary>
             <p class="hd-vi"><b>Vì sao:</b> Quên ghi là chuyện thường. Mỗi tuần so số dư trong sổ với tiền thật thì lệch nhỏ, còn nhớ ra khoản nào; để cả tháng thì không lần ra.</p>
             <ol><li>☰ → <b>Đối soát ví</b> → chạm một ví.</li><li>Mở app ngân hàng hoặc đếm tiền mặt → nhập <b>Số dư thật</b>.</li><li>Khớp → bấm <b>Khớp – lưu đối soát</b>.</li><li>Lệch → nhớ ra khoản quên: <b>Ghi khoản … bị thiếu</b>. Không nhớ: <b>Ghi "Chênh lệch chưa rõ"</b> để ví khớp lại.</li></ol>
-            
+            <div class="hd-them">📥 Đối soát cả loạt mỗi tháng: ☰ → <b>Nhập Excel</b> → tải file mẫu → sửa số dư thật → tải lên. Ví lệch tự ghi "Chênh lệch chưa rõ".</div>
             <p class="hd-xong">✅ <b>Xong khi thấy:</b> lịch sử đối soát có dòng "✓ Khớp".</p>
             <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="doisoat">Đối soát ngay ›</button><button class="nut-nho" data-hd-mo="9">Tiếp: 9 · Đặt ngân sách tháng ›</button></div>
           </details>
@@ -673,8 +703,8 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
         <details class="hd-gd" id="hdg-quy"><summary><span class="hd-ico">📈</span><span>Đầu mỗi quý<small>20 phút · bước 14–15</small></span><span class="hd-dem" data-hd-dem="quy"></span></summary>
           <details class="hd-buoc" id="hd-b14" data-buoc="14"><summary><span class="hd-so" data-hd-so="14">14</span><span>Định giá lại tài sản<small>Chồng</small></span></summary>
             <p class="hd-vi"><b>Vì sao:</b> Giá vàng, cổ phiếu, đất thay đổi. Không cập nhật thì tổng tài sản và tháp sai. Định giá lại <b>không</b> tính vào thu nhập.</p>
-            <ol><li>Tab <b>Tài sản</b> → banner "… chưa định giá" → <b>Xem</b> (hoặc chạm một tài sản).</li><li>Bấm <b>Định giá lại</b> → nhập giá hôm nay → <b>Lưu giá mới</b>.</li></ol>
-            
+            <ol><li>Tab <b>Tài sản</b> → banner "… chưa định giá" → <b>Xem</b> (hoặc chạm một tài sản).</li><li>Bấm <b>Định giá lại</b> → nhập giá hôm nay → <b>Lưu giá mới</b>.</li><li>Vàng tính theo chỉ: bấm <b>🏷 Cập nhật giá theo chỉ</b> → nhập giá 1 chỉ → app nhân ra tiền cho mọi khoản vàng, kể cả vàng cho mượn.</li></ol>
+            <div class="hd-them">📥 Cập nhật mọi thứ một lần: ☰ → <b>Nhập Excel</b> → tải file mẫu (đã có số hiện tại) → sửa giá, số dư → tải lên. Cho mượn tăng, giảm thì app hỏi tiền ra, về ví nào. Khoản không đổi được ghi "giữ giá".</div>
             <p class="hd-xong">✅ <b>Xong khi thấy:</b> giá mới ở đầu màn tài sản, lịch sử ghi "+… chưa thực hiện".</p>
             <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="dinhgia">Xem tài sản cần định giá ›</button><button class="nut-nho" data-hd-mo="15">Tiếp: 15 · Xem tháp và chia tiền mới ›</button></div>
           </details>
@@ -1047,16 +1077,16 @@ async function vaoApp() {
   diToi(soSanSang() ? 'nha' : 's2');
 }
 function diToi(man) {
-  if (!soSanSang() && man !== 'huongdan') man = 's2';
+  if (!soSanSang() && man !== 'huongdan' && man !== 'nhapexcel') man = 's2';
   document.querySelectorAll('.man').forEach(m => m.classList.remove('hien'));
   $('man-' + man).classList.add('hien'); KHO.man = man;
   $('tieu-de').textContent = TIEU_DE[man] || (KHO.so && KHO.so.ten) || 'Nhà mình';
   const cha = CHA_TAB[man] || man;
   document.querySelectorAll('nav .tab[data-man]').forEach(t => t.classList.toggle('dang-o', t.dataset.man === cha));
   if (man !== 'so' && S7.loc) { S7.loc = null; veS7(); }
-  document.querySelector('nav.duoi').classList.toggle('an', man === 's2');     // đang thiết lập sổ: chưa cần thanh dưới
+  document.querySelector('nav.duoi').classList.toggle('an', man === 's2' || man === 'nhapexcel' && !soSanSang());     // đang thiết lập sổ: chưa cần thanh dưới
   window.scrollTo(0, 0);
-  if (soSanSang() || man === 'huongdan') veManHien();
+  if (soSanSang() || man === 'huongdan' || man === 'nhapexcel') veManHien();
 }
 
 /* ═════════ Vẽ tất cả ═════════ */
@@ -1872,7 +1902,7 @@ function moNgan(ma) { S16.ngan = ma; diToi('ngan'); veS17(); }
 /* ═════════ Điều hướng chung: tiêu đề, menu (bản hoàn thiện) ═════════ */
 const TIEU_DE = { nha: '', so: 'Sổ', baocao: 'Báo cáo', ngansach: 'Ngân sách', tuanhoan: 'Hệ tuần hoàn', ngan: 'Chi tiết ngăn', taisan: 'Tài sản',
   tsct: 'Tài sản', noct: 'Khoản nợ', chiatien: 'Chia tiền mới', xuhuong: 'Xu hướng', chotky: 'Chốt tháng', doisoat: 'Đối soát ví',
-  kaizen: 'Kaizen', caidat: 'Cài đặt', saoluu: 'Sao lưu & xuất', huongdan: 'Hướng dẫn', s2: 'Thiết lập sổ' };
+  kaizen: 'Kaizen', caidat: 'Cài đặt', saoluu: 'Sao lưu & xuất', nhapexcel: 'Nhập Excel', huongdan: 'Hướng dẫn', s2: 'Thiết lập sổ' };
 const CHA_TAB = { tuanhoan: 'nha', ngan: 'nha', ngansach: 'baocao', tsct: 'taisan', noct: 'taisan', chiatien: 'taisan' };
 const VE_MAN = {};   // màn → hàm vẽ (điền ở cuối tệp)
 function veManHien() { const f = VE_MAN[KHO.man]; if (f) f(); }
@@ -1885,6 +1915,7 @@ function moMenu() {
      ['kaizen', '🎯', 'Kaizen', 'Điều chỉnh nhỏ có đích và hạn'],
      ['xuhuong', '📈', 'Xu hướng', 'Chỉ số qua các tháng'],
      ['caidat', '⚙️', 'Cài đặt', 'Sổ, danh mục, định kỳ, mục tiêu, nhắc'],
+     ['nhapexcel', '📥', 'Nhập Excel', 'Cập nhật ví, tài sản, nợ một lần bằng file'],
      ['saoluu', '💾', 'Sao lưu & xuất', 'Sao lưu, khôi phục, tải bảng tính'],
      ['huongdan', '📖', 'Hướng dẫn sử dụng', 'Bắt đầu từ đâu, từng bước làm gì, tra cứu khi cần']]
       .map(x => '<button data-menu="' + x[0] + '"><span class="i">' + x[1] + '</span><span>' + x[2] + '<small>' + esc(x[3]) + '</small></span></button>').join('') +
@@ -1914,7 +1945,39 @@ function mauLop(l, p) {
 }
 function tsCanDinhGia(D) {
   D = D || homNay(); const han = so(cauHinh('ngay_dinh_gia_qua_han')) || 90;
-  return ds('TaiSan').filter(t => so(t.lop) >= 2 && t.kieu !== 'PHAI_THU' && giaTriTS(t, D) > 0).filter(t => { const m = moc(t, D); return !m || soNgay(m.ngay, D) > han; });
+  return ds('TaiSan').filter(t => so(t.lop) >= 2 && (t.kieu !== 'PHAI_THU' || soLuong(t) > 0) && giaTriTS(t, D) > 0).filter(t => { const m = moc(t, D); return !m || soNgay(m.ngay, D) > han; });
+}
+// Số lượng kiểu Việt: "20", "2,5", "1.250" → số
+function soLuong(t) { const x = String(t && t.so_luong != null ? t.so_luong : '').trim(); if (!x) return 0; return Number(x.includes(',') ? x.replace(/\./g, '').replace(',', '.') : x) || 0; }
+function donVi(t) { return String(t.don_vi || '').trim().toLowerCase() || 'đơn vị'; }
+function giaDonViGanNhat(t) { const m = moc(t, homNay()), sl = soLuong(t); return m && sl ? Math.round(so(m.gia_tri) / sl) : 0; }
+// Cập nhật giá theo đơn vị (VD giá 1 chỉ vàng) cho mọi tài sản cùng đơn vị, một lần
+function moFormGiaDonVi() {
+  const tss = ds('TaiSan').filter(t => soLuong(t) > 0 && giaTriTS(t) > 0), nhom = {};
+  tss.forEach(t => (nhom[donVi(t)] = nhom[donVi(t)] || []).push(t));
+  const dvs = Object.keys(nhom); if (!dvs.length) return toast('Chưa có tài sản nào ghi số lượng (VD "20 chỉ")');
+  const hn = homNay();
+  moHop('Cập nhật giá theo ' + dvs.join(', '),
+    '<div class="truong" style="margin-top:0"><label for="gdv-ngay">Giá tại ngày</label><input id="gdv-ngay" type="date" value="' + hn + '" max="' + hn + '"></div>' +
+    dvs.map((dv, i) => '<div class="truong"><label for="gdv-' + i + '">Giá 1 ' + esc(dv) + ' (đồng)</label><input id="gdv-' + i + '" data-gdv="' + i + '" inputmode="numeric" class="so" placeholder="Lần trước: ' + fmtDu(giaDonViGanNhat(nhom[dv][0])) + '"></div>' +
+      '<div id="gdv-ds-' + i + '"></div>').join('') +
+    '<p class="ghi-chu-nho" style="margin-top:8px">App nhân số lượng × giá ra giá trị mới. Chênh lệch là lãi/lỗ chưa thực hiện, không tính vào thu nhập.</p>',
+    async () => {
+      const ngay = $('gdv-ngay').value;
+      if (!ngay || ngay > hn) return 'Chọn ngày không sau hôm nay';
+      if (KHO.so && ngay < KHO.so.ngay_bat_dau) return 'Ngày trước ngày bắt đầu sổ';
+      if (kyDaKhoa(ngay)) return 'Tháng này đã khoá. Mở khoá ở Chốt tháng';
+      let n = 0;
+      for (let i = 0; i < dvs.length; i++) { const g = docTien($('gdv-' + i)); if (!g) continue;
+        for (const t of nhom[dvs[i]]) { await luu('DinhGia', { tai_san: t.ma, ngay, gia_tri: Math.round(soLuong(t) * g), nguon: 'DINH_GIA_LAI', ghi_chu: 'Giá 1 ' + dvs[i] + ' ' + fmtDu(g) }); n++; } }
+      if (!n) return 'Nhập ít nhất một giá';
+      dongHop(); veTatCa(); toast('Đã cập nhật giá ' + n + ' tài sản');
+    }, null, 'Lưu giá mới');
+  const ve = i => { const g = docTien($('gdv-' + i));
+    $('gdv-ds-' + i).innerHTML = nhom[dvs[i]].map(t => { const moi = Math.round(soLuong(t) * g), ch = moi - giaTriTS(t);
+      return '<div class="dong"><div class="giua"><div class="ten">' + esc(t.ten) + '</div><div class="phu">' + soLuong(t).toLocaleString('vi-VN') + ' ' + esc(dvs[i]) + (t.kieu === 'PHAI_THU' ? ' · cho mượn' : '') + '</div></div><div style="text-align:right"><div class="so-tien">' + (g ? fmtDu(moi) : fmtDu(giaTriTS(t))) + '</div>' +
+        (g ? '<div class="so-tien ' + (ch >= 0 ? 'xanh' : 'do') + '" style="font-size:.8rem">' + (ch >= 0 ? '+' : '') + fmtGon(ch) + '</div>' : '') + '</div></div>'; }).join(''); };
+  dvs.forEach((_, i) => { boDinhDangTien($('gdv-' + i)); $('gdv-' + i).addEventListener('input', () => ve(i)); ve(i); });
 }
 const S11 = { loc: '' };
 function veS10() {
@@ -1929,9 +1992,11 @@ function veS10() {
   }).join('') +
     '<button class="tang vo-hinh mau-' + c.mau.chi_ban_than + '" data-lop="1" style="width:100%"><span class="cham"></span><span class="t">1 · Vô hình<small>chi học, sức khoẻ · đích ≥ 10% thu</small></span><span class="p">' + fmtCS('chi_ban_than', c.v.chi_ban_than) + '</span></button>';
   $('s10-chu-thich').textContent = 'Lớp 2 gồm ' + fmtGon(g.tien) + ' tiền trong ví. Viền xanh: trong mục tiêu · vàng: lệch · đỏ: lệch hơn 10 điểm.';
+  const dvs = [...new Set(ds('TaiSan').filter(t => soLuong(t) > 0 && giaTriTS(t) > 0).map(donVi))];
+  $('s10-gia-dv').classList.toggle('an', !dvs.length || !laQT()); $('s10-gia-dv').textContent = '🏷 Cập nhật giá theo ' + dvs.join(', ');
   const can = tsCanDinhGia();
   $('s10-dinh-gia').classList.toggle('an', !can.length);
-  $('s10-dinh-gia-chu').textContent = can.length + ' tài sản quá ' + (so(cauHinh('ngay_dinh_gia_qua_han')) || 90) + ' ngày chưa định giá lại';
+  $('s10-dinh-gia-chu').textContent = can.length + ' tài sản quá ' + (so(cauHinh('ngay_dinh_gia_qua_han')) || 90) + ' ngày chưa định giá lại' + (can.some(t => soLuong(t) > 0) ? ' · vàng: bấm "Cập nhật giá theo chỉ"' : '');
   const locs = [['', 'Tất cả'], ['vi', 'Ví'], ['2', LOP[2]], ['3', LOP[3]], ['4', LOP[4]], ['5', LOP[5]], ['no', 'Nợ'], ['dg', 'Cần định giá']];
   $('s11-loc').innerHTML = locs.map(x => '<button data-loc-ts="' + x[0] + '"' + (S11.loc === x[0] ? ' class="dang-chon"' : '') + '>' + x[1] + '</button>').join('');
   const L = S11.loc;
@@ -1982,7 +2047,8 @@ function moFormDinhGia(t) {
     '<div class="goi-y" style="margin-top:0">Giá đang ghi: <b class="so">' + fmtDu(cu) + '</b>. Chênh lệch là lãi/lỗ chưa thực hiện, <b>không</b> tính vào thu nhập.</div>' +
     '<div class="hai-cot"><div class="truong"><label for="dg-gt">Giá trị mới</label><input id="dg-gt" data-tien inputmode="numeric" class="so"></div>' +
     '<div class="truong"><label for="dg-ngay">Tại ngày</label><input id="dg-ngay" type="date" value="' + hn + '" max="' + hn + '"></div></div>' +
-    '<div class="truong"><label for="dg-gc">Căn cứ (tuỳ chọn)</label><input id="dg-gc" maxlength="120" placeholder="VD: giá SJC mua vào 16/10"></div>' +
+    (soLuong(t) > 0 ? '<div class="truong"><label for="dg-dv">Hoặc nhập giá 1 ' + esc(donVi(t)) + ' (có ' + soLuong(t).toLocaleString('vi-VN') + ' ' + esc(donVi(t)) + ')</label><input id="dg-dv" inputmode="numeric" class="so"></div>' : '') +
+    '<div class="truong"><label for="dg-gc">Căn cứ (tuỳ chọn)</label><input id="dg-gc" maxlength="120" placeholder="VD: giá nhẫn 9999 mua vào 01/11"></div>' +
     '<p class="ghi-chu-nho" style="margin-top:8px" id="dg-chenh"></p>',
     async () => {
       const gt = docTien($('dg-gt')), ngay = $('dg-ngay').value;
@@ -1990,12 +2056,13 @@ function moFormDinhGia(t) {
       if (!ngay || ngay > hn) return 'Chọn ngày không sau hôm nay';
       if (KHO.so && ngay < KHO.so.ngay_bat_dau) return 'Ngày trước ngày bắt đầu sổ';
       if (kyDaKhoa(ngay)) return 'Tháng này đã khoá. Mở khoá ở Chốt tháng';
-      await luu('DinhGia', { tai_san: t.ma, ngay, gia_tri: gt, nguon: 'DINH_GIA_LAI', ghi_chu: $('dg-gc').value.trim() });
+      await luu('DinhGia', { tai_san: t.ma, ngay, gia_tri: gt, nguon: 'DINH_GIA_LAI', ghi_chu: $('dg-gc').value.trim() || ($('dg-dv') && docTien($('dg-dv')) ? 'Giá 1 ' + donVi(t) + ' ' + fmtDu(docTien($('dg-dv'))) : '') });
       dongHop(); veTatCa(); toast('Đã định giá ' + t.ten + ': ' + fmtGon(gt));
     }, null, 'Lưu giá mới');
   const capNhat = () => { const v = docTien($('dg-gt')), ch = v - giaTriTS(t, $('dg-ngay').value || hn);
     $('dg-chenh').innerHTML = $('dg-gt').value === '' ? '' : 'Chênh: <b class="so ' + (ch >= 0 ? 'xanh' : 'do') + '">' + (ch >= 0 ? '+' : '') + fmtDu(ch) + '</b>'; };
   $('dg-gt').addEventListener('input', capNhat); $('dg-ngay').addEventListener('change', capNhat);
+  if ($('dg-dv')) { boDinhDangTien($('dg-dv')); $('dg-dv').addEventListener('input', () => { const g = docTien($('dg-dv')); ganTien($('dg-gt'), Math.round(g * soLuong(t))); if (g && !$('dg-gc').value) $('dg-gc').placeholder = 'Giá 1 ' + donVi(t) + ' ' + fmtDu(g); capNhat(); }); }
 }
 
 /* ═════════ S13 Chi tiết khoản nợ ═════════ */
@@ -2333,7 +2400,7 @@ function veS22() {
   const mt = cauHinh('muc_tieu_lop'), ng = cauHinh('nguong');
   $('s22-nguong').innerHTML = '<table class="bang"><tr><th>Lớp tháp</th><th class="so">Mục tiêu</th></tr>' + [2, 3, 4, 5].map(l => '<tr><td>' + l + ' · ' + LOP[l] + '</td><td class="so">' + mtLop(l)[0] + '–' + mtLop(l)[1] + '%</td></tr>').join('') + '</table>' +
     '<details style="margin-top:8px"><summary class="ghi-chu-nho" style="cursor:pointer">Ngưỡng xanh / đỏ của 8 chỉ số</summary><table class="bang" style="margin-top:6px">' + Object.keys(ng).filter(k => CS_MO_TA[k]).map(k => '<tr><td>' + CS_MO_TA[k].ten + '</td><td class="so" style="white-space:normal;text-align:right">' + esc(nguongCS(k)) + '</td></tr>').join('') +
-    '<tr><td>Báo động ngân sách</td><td class="so">≥ ' + Math.round(cauHinh('bao_dong_ngan_sach') * 100) + '%</td></tr></table></details>';
+    '<tr><td>Báo động ngân sách</td><td class="so">≥ ' + Math.round(cauHinh('bao_dong_ngan_sach') * 100) + '%</td></tr><tr><td>Nhắc định giá lại</td><td class="so">sau ' + so(cauHinh('ngay_dinh_gia_qua_han')) + ' ngày</td></tr></table></details>';
   $('s22-nhac').innerHTML = NHAC.map(([k, t]) => '<label class="hop-kiem"><input type="checkbox" data-nhac="' + k + '"' + (nhacBat(k) ? ' checked' : '') + '> ' + t + '</label>').join('') +
     '<p class="ghi-chu-nho" style="margin-top:6px">Nhắc hiện ở đầu màn Nhà mình khi mở app. Mỗi máy đặt riêng.</p>';
   $$('#man-caidat [data-chi-qt]').forEach(x => x.classList.toggle('an', !qt));
@@ -2423,7 +2490,8 @@ function moFormNguong() {
     '<table class="bang"><tr><th>Lớp</th><th class="so">Từ %</th><th class="so">Đến %</th></tr>' + [2, 3, 4, 5].map(l => '<tr><td>' + l + ' · ' + LOP[l] + '</td><td><input class="so" style="width:64px" data-mt="' + l + '-0" inputmode="numeric" value="' + mtLop(l)[0] + '"></td><td><input class="so" style="width:64px" data-mt="' + l + '-1" inputmode="numeric" value="' + mtLop(l)[1] + '"></td></tr>').join('') + '</table>' +
     '<table class="bang" style="margin-top:12px"><tr><th>Chỉ số</th><th class="so">Xanh</th><th class="so">Đỏ</th></tr>' + ks.map(k => '<tr><td>' + CS_MO_TA[k].ten + '<div class="ghi-chu-nho">' + (ng[k].chieu === 'cao_tot' ? 'cao là tốt' : 'thấp là tốt') + ' · ' + (pt(k) ? '%' : CS_MO_TA[k].dv) + '</div></td>' +
       '<td><input class="so" style="width:64px" data-ng="' + k + '-xanh" inputmode="decimal" value="' + hien(k, ng[k].xanh) + '"></td><td><input class="so" style="width:64px" data-ng="' + k + '-do" inputmode="decimal" value="' + hien(k, ng[k].do) + '"></td></tr>').join('') + '</table>' +
-    '<div class="truong"><label for="f-bd">Báo động ngân sách khi đã dùng (%)</label><input id="f-bd" inputmode="numeric" value="' + Math.round(cauHinh('bao_dong_ngan_sach') * 100) + '"></div>',
+    '<div class="truong"><label for="f-bd">Báo động ngân sách khi đã dùng (%)</label><input id="f-bd" inputmode="numeric" value="' + Math.round(cauHinh('bao_dong_ngan_sach') * 100) + '"></div>' +
+    '<div class="truong"><label for="f-dg">Nhắc định giá lại tài sản sau (ngày)</label><select id="f-dg">' + [30, 60, 90].map(n => '<option value="' + n + '"' + (so(cauHinh('ngay_dinh_gia_qua_han')) === n ? ' selected' : '') + '>' + n + ' ngày' + (n === 30 ? ' (mỗi tháng)' : n === 90 ? ' (mỗi quý)' : '') + '</option>').join('') + '</select></div>',
     async () => {
       const mt = {}; let tongMin = 0;
       for (const l of [2, 3, 4, 5]) { const a = Number($$('[data-mt="' + l + '-0"]')[0].value), b = Number($$('[data-mt="' + l + '-1"]')[0].value);
@@ -2435,7 +2503,7 @@ function moFormNguong() {
         if (ng[k].chieu === 'cao_tot' ? x < y : x > y) return CS_MO_TA[k].ten + ': ngưỡng xanh phải ' + (ng[k].chieu === 'cao_tot' ? '≥' : '≤') + ' ngưỡng đỏ';
         ngMoi[k].xanh = pt(k) ? x / 100 : x; ngMoi[k].do = pt(k) ? y / 100 : y; }
       const bd = Number($('f-bd').value); if (!(bd > 0 && bd <= 100)) return 'Báo động ngân sách từ 1 đến 100%';
-      for (const [ma, gt] of [['muc_tieu_lop', mt], ['nguong', ngMoi], ['bao_dong_ngan_sach', bd / 100]]) {
+      for (const [ma, gt] of [['muc_tieu_lop', mt], ['nguong', ngMoi], ['bao_dong_ngan_sach', bd / 100], ['ngay_dinh_gia_qua_han', so($('f-dg').value)]]) {
         const r = (KHO.duLieu.CauHinh || []).find(x => x.ma === ma) || { ma };
         await luu('CauHinh', Object.assign({}, r, { gia_tri: JSON.stringify(gt) }));
       }
@@ -2624,11 +2692,257 @@ const HD_LAM = {
   dinhgia: () => { diToi('taisan'); locS11('dg'); }, chiatien: () => diToi('chiatien')
 };
 
+/* ═════════ Nhập Excel: ví, tài sản, nợ (một file, xem trước, một nút Áp dụng) ═════════ */
+const NX = { trang: null, tep: '', ke: null, chon: {} };
+const COT_VI = ['Tên ví', 'Loại', 'Của', 'Số dư (đồng)', 'Ghi chú'];
+const COT_TS = ['Tên tài sản', 'Lớp (2–5)', 'Kiểu', 'Số lượng', 'Đơn vị', 'Giá 1 đơn vị', 'Giá trị (đồng)', 'Ghi chú'];
+const COT_NO = ['Tên khoản nợ', 'Gốc còn lại (đồng)', 'Lãi %/năm', 'Trả mỗi tháng', 'Ghi chú'];
+function laKhoiTaoNX() { return !soSanSang(); }
+function ngayNX() { return laKhoiTaoNX() ? (KHO.so && KHO.so.ngay_bat_dau) || '' : (($('nx-ngay') && $('nx-ngay').value) || homNay()); }
+
+// ── Đọc .xlsx ngay trên máy (không thư viện, không gửi tệp đi đâu) ──
+function cotSo(chu) { let n = 0; for (const c of chu) n = n * 26 + (c.charCodeAt(0) - 64); return n - 1; }
+async function docZip(buf) {
+  const u8 = new Uint8Array(buf), dv = new DataView(buf), dec = new TextDecoder();
+  let e = u8.length - 22; while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+  if (e < 0) throw new Error('Đây không phải tệp Excel .xlsx');
+  const n = dv.getUint16(e + 10, true); let p = dv.getUint32(e + 16, true); const tep = {};
+  for (let i = 0; i < n && dv.getUint32(p, true) === 0x02014b50; i++) {
+    const nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+    tep[dec.decode(u8.subarray(p + 46, p + 46 + nl))] = { pp: dv.getUint16(p + 10, true), size: dv.getUint32(p + 20, true), off: dv.getUint32(p + 42, true) };
+    p += 46 + nl + xl + cl;
+  }
+  return async ten => {
+    const f = tep[ten]; if (!f) return null;
+    const bd = f.off + 30 + dv.getUint16(f.off + 26, true) + dv.getUint16(f.off + 28, true), d = u8.subarray(bd, bd + f.size);
+    if (f.pp === 0) return dec.decode(d);
+    if (f.pp === 8 && typeof DecompressionStream !== 'undefined') return await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+    throw new Error('Trình duyệt chưa đọc được tệp nén này. Mở bằng Chrome/Safari mới.');
+  };
+}
+async function docXlsx(buf) {
+  const doc = await docZip(buf), P = s => new DOMParser().parseFromString(s, 'application/xml'), tag = (x, t) => Array.from(x.getElementsByTagName(t));
+  const wbx = await doc('xl/workbook.xml'); if (!wbx) throw new Error('Tệp Excel thiếu phần bảng tính');
+  const rels = {}; tag(P(await doc('xl/_rels/workbook.xml.rels') || '<r/>'), 'Relationship').forEach(r => rels[r.getAttribute('Id')] = r.getAttribute('Target'));
+  const ssx = await doc('xl/sharedStrings.xml'), ss = ssx ? tag(P(ssx), 'si').map(si => tag(si, 't').map(t => t.textContent).join('')) : [];
+  const trang = {};
+  for (const sh of tag(P(wbx), 'sheet')) {
+    let tg = (rels[sh.getAttribute('r:id')] || '').replace(/^\//, ''); if (!tg.startsWith('xl/')) tg = 'xl/' + tg;
+    const x = await doc(tg); if (!x) continue;
+    const hang = [];
+    tag(P(x), 'row').forEach(row => { const h = [];
+      tag(row, 'c').forEach(c => { const col = cotSo((c.getAttribute('r') || 'A').replace(/\d+/g, '')), t = c.getAttribute('t'), v = c.getElementsByTagName('v')[0];
+        h[col] = t === 's' ? (ss[Number(v && v.textContent)] || '') : t === 'inlineStr' ? tag(c, 't').map(y => y.textContent).join('') : t === 'b' ? (v && v.textContent === '1') : v ? (t === 'str' || t === 'e' ? v.textContent : Number(v.textContent)) : ''; });
+      hang[Number(row.getAttribute('r')) - 1] = h; });
+    trang[sh.getAttribute('name')] = hang;
+  }
+  return trang;
+}
+
+// ── File mẫu điền sẵn ──
+function taiMauExcel() {
+  const trong = !ds('Vi').length && !ds('TaiSan').length;
+  const vi = ds('Vi').filter(v => v.trang_thai !== 'DA_DONG').map(v => [v.ten, LOAI_VI[v.loai] || 'Ngân hàng', CHU[v.chu] || 'Chung', soSanSang() ? soDuVi(v) || 0 : so(v.so_du_dau_ky), '']);
+  const ts = ds('TaiSan').filter(t => so(t.lop) >= 2 && (giaTriTS(t) > 0 || !ds('GiaoDich').some(g => g.tai_san === t.ma))).map(t => [t.ten, so(t.lop), t.kieu === 'PHAI_THU' ? 'Cho mượn' : 'Tài sản', soLuong(t) || '', soLuong(t) ? t.don_vi || '' : '', soLuong(t) ? giaDonViGanNhat(t) || '' : '', giaTriTS(t), '']);
+  const no = ds('KhoanNo').filter(n => gocNo(n) > 0 || !soSanSang()).map(n => [n.ten, gocNo(n), Number(n.lai_suat) || 0, so(n.tra_du_kien), '']);
+  if (trong) { vi.push(['VD: Techcombank chồng', 'Ngân hàng', 'Chồng', 25000000, 'Dòng bắt đầu bằng "VD:" sẽ được bỏ qua']); ts.push(['VD: Vàng nhẫn 9999', 2, 'Tài sản', 20, 'chỉ', 10200000, '', 'Có số lượng + giá 1 đơn vị thì không cần cột Giá trị'], ['VD: Chị A mượn', 2, 'Cho mượn', '', '', '', 50000000, '']); }
+  const hd = [['Cách dùng tệp này'], ['1. Mỗi trang một loại: Ví · Tài sản · Nợ. Mỗi dòng một khoản.'], ['2. Sửa số, thêm dòng mới ở cuối. Không đổi tên cột, không đổi tên khoản đang có.'],
+    ['3. Loại ví: Tiền mặt · Ngân hàng · Tiết kiệm · Ví điện tử. Của: Chồng · Vợ · Chung.'],
+    ['   Chứng khoán: mỗi sàn một dòng ở trang Tài sản, lớp 4, Giá trị = giá trị cổ phiếu đang có trên sàn (không tính tiền chờ).'], ['4. Lớp tài sản: 2 Bảo vệ · 3 Tạo thu nhập · 4 Tăng trưởng · 5 Mạo hiểm. Kiểu: Tài sản hoặc Cho mượn.'],
+    ['5. Vàng: điền Số lượng (VD 20), Đơn vị (chỉ), Giá 1 đơn vị. App tự nhân ra Giá trị.'], ['6. Số dư ví = tiền thật đang có. Lệch với sổ thì app ghi "Chênh lệch chưa rõ" cho khớp.'],
+    ['7. Lưu tệp → app Nhà mình → ☰ → Nhập Excel → Chọn file đã điền → xem trước → Áp dụng.']];
+  const blob = taoXlsx([{ ten: 'Ví', hang: [COT_VI].concat(vi), rong: [30, 16, 10, 18, 40] }, { ten: 'Tài sản', hang: [COT_TS].concat(ts), rong: [30, 10, 12, 10, 9, 15, 18, 40] },
+    { ten: 'Nợ', hang: [COT_NO].concat(no), rong: [30, 20, 11, 16, 40] }, { ten: 'Hướng dẫn', hang: hd, rong: [100] }]);
+  taiVe('nha-minh-vi-tai-san-' + homNay() + '.xlsx', blob);
+}
+
+// ── Đọc từng trang thành dòng dữ liệu ──
+function timTrang(trang, ten) { const k = Object.keys(trang).find(x => boDau(x).trim() === ten); return k ? trang[k] : null; }
+function docBangNX(hang, cot) {
+  if (!hang || !hang[0]) return [];
+  const dau = hang[0].map(h => boDau(h || '').trim()), vt = cot.map(c => { const b = boDau(c); const i = dau.indexOf(b); return i >= 0 ? i : dau.findIndex(d => d && b.split(' (')[0] === d.split(' (')[0]); });
+  const ra = [];
+  for (let r = 1; r < hang.length; r++) { const h = hang[r]; if (!h) continue; const o = { dong: r + 1 }; cot.forEach((c, j) => o[j] = vt[j] >= 0 ? h[vt[j]] : '');
+    const ten = String(o[0] == null ? '' : o[0]).trim(); if (!ten || /^vd\s*:/i.test(ten)) continue; o[0] = ten; ra.push(o); }
+  return ra;
+}
+function tienNX(x) { if (x === '' || x == null) return null; if (typeof x === 'number') return Math.round(x); const s = String(x).replace(/[^\d-]/g, ''); return s && s !== '-' ? Number(s) : null; }
+function soNX(x) { if (x === '' || x == null) return 0; if (typeof x === 'number') return x; return soLuong({ so_luong: String(x).replace(/[^\d.,]/g, '') }); }
+function loaiViNX(x) { const b = boDau(x || ''); return /tien mat/.test(b) ? 'TIEN_MAT' : /tiet kiem/.test(b) ? 'TIET_KIEM' : /chung khoan/.test(b) ? 'CHUNG_KHOAN' : /dien tu|momo|zalo/.test(b) ? 'VI_DIEN_TU' : /ngan hang|^$/.test(b) ? 'NGAN_HANG' : null; }
+function chuNX(x) { const b = boDau(x || '').trim(); return b === 'vo' ? 'VO' : b === 'chong' ? 'CHONG' : 'CHUNG'; }
+const timTen = (bang, ten) => ds(bang).find(x => boDau(x.ten).trim() === boDau(ten).trim());
+
+// ── Lập kế hoạch thay đổi (chưa ghi gì) ──
+function lapKeHoachNX() {
+  const T = NX.trang, kt = laKhoiTaoNX(), ngay = ngayNX(), ke = { vi: [], ts: [], no: [], bo: [], ngay, kt };
+  const viRow = docBangNX(timTrang(T, 'vi'), COT_VI), tsRow = docBangNX(timTrang(T, 'tai san'), COT_TS), noRow = docBangNX(timTrang(T, 'no'), COT_NO);
+  if (!timTrang(T, 'vi') && !timTrang(T, 'tai san') && !timTrang(T, 'no')) ke.bo.push({ ten: 'Cả tệp', ly: 'Không thấy trang "Ví", "Tài sản" hay "Nợ". Dùng file mẫu của app.' });
+  const dongTien = {};   // tiền ra/vào từng ví do cho mượn, nợ, mua bán (để tính lệch ví)
+  const them = (vi, d) => { if (vi) dongTien[vi] = (dongTien[vi] || 0) + d; };
+  // Tài sản
+  tsRow.forEach(o => {
+    const lop = Number(String(o[1]).match(/[1-5]/) ? String(o[1]).match(/[1-5]/)[0] : 0), kieu = /muon|vay|phai thu/.test(boDau(o[2] || '')) ? 'PHAI_THU' : 'THUONG';
+    const sl = soNX(o[3]), dv = String(o[4] || '').trim(), gdv = tienNX(o[5]), gtFile = tienNX(o[6]);
+    const moi = sl && gdv ? Math.round(sl * gdv) : gtFile;
+    if (moi == null) return ke.bo.push({ ten: o[0], ly: 'Dòng ' + o.dong + ' trang Tài sản: thiếu Giá trị (hoặc Số lượng + Giá 1 đơn vị)' });
+    if (lop < 2 || lop > 5) return ke.bo.push({ ten: o[0], ly: 'Dòng ' + o.dong + ': Lớp phải là 2, 3, 4 hoặc 5' });
+    if (/^(tien mat|tiet kiem|tai khoan|ngan hang)/.test(boDau(o[0]))) return ke.bo.push({ ten: o[0], ly: 'Tiền khai ở trang Ví, không khai ở Tài sản' });
+    const t = timTen('TaiSan', o[0]), key = 'ts:' + boDau(o[0]);
+    if (!t) return ke.ts.push({ key, viec: 'them', ten: o[0], lop, kieu, sl, dv, gdv, moi, mo: 'Thêm · lớp ' + lop + ' ' + LOP[lop] + (kieu === 'PHAI_THU' ? ' · cho mượn' : '') + (sl ? ' · ' + sl.toLocaleString('vi-VN') + ' ' + dv : '') });
+    const cu = kt ? so((ds('DinhGia').find(d => d.tai_san === t.ma && d.nguon === 'DAU_KY') || {}).gia_tri) : giaTriTS(t, ngay), slCu = soLuong(t);
+    const doiTT = so(t.lop) !== lop || (sl && (sl !== slCu || boDau(dv) !== boDau(t.don_vi || '')));
+    if (moi === cu && !doiTT) return ke.ts.push({ key, viec: 'khop', t, ten: t.ten, moi, xacNhan: !kt && moi > 0 && (t.kieu !== 'PHAI_THU' || slCu > 0), mo: kt ? 'Không đổi' : 'Giữ giá ' + fmtGon(moi) });
+    const r = { key, viec: 'doi', t, ten: t.ten, lop, sl, dv, gdv, cu, moi, d: moi - cu, doiTT };
+    if (kt) { r.mo = 'Giá đầu kỳ ' + fmtGon(cu) + ' → ' + fmtGon(moi); return ke.ts.push(r); }
+    // phần đổi do tiền ra/vào: cho mượn đổi số lượng/tiền; tài sản thường: anh chọn
+    if (t.kieu === 'PHAI_THU') {
+      const dTien = slCu && sl === slCu ? 0 : (slCu && sl ? Math.round((sl - slCu) * (gdv || giaDonViGanNhat(t))) : moi - cu);
+      r.dTien = dTien; r.macDinh = dTien ? 'tien' : 'gia';
+    } else { r.dTien = moi - cu; r.macDinh = 'gia'; }
+    const ch = NX.chon[key] || {}; r.cach = r.dTien ? (ch.cach || r.macDinh) : 'gia'; r.vi = ch.vi || viGanNhat();
+    if (r.cach === 'tien') them(r.vi, -r.dTien);   // cho mượn thêm / mua thêm: tiền ra khỏi ví
+    const ten = t.kieu === 'PHAI_THU' ? (r.dTien > 0 ? 'Cho mượn thêm' : 'Thu nợ về') : (r.dTien > 0 ? 'Mua thêm' : 'Bán bớt');
+    r.tenTien = ten; r.mo = fmtGon(cu) + ' → ' + fmtGon(moi);
+    ke.ts.push(r);
+  });
+  // Nợ
+  noRow.forEach(o => {
+    const goc = tienNX(o[1]); if (goc == null) return ke.bo.push({ ten: o[0], ly: 'Dòng ' + o.dong + ' trang Nợ: thiếu Gốc còn lại' });
+    const ls = soNX(o[2]), tra = tienNX(o[3]) || 0, n = timTen('KhoanNo', o[0]), key = 'no:' + boDau(o[0]);
+    if (!n) return ke.no.push({ key, viec: 'them', ten: o[0], goc, ls, tra, mo: 'Thêm · gốc ' + fmtGon(goc) });
+    const cu = kt ? so(n.goc_dau_ky) : gocNo(n, ngay), doiTT = Number(n.lai_suat || 0) !== ls || so(n.tra_du_kien) !== tra;
+    if (goc === cu && !doiTT) return ke.no.push({ key, viec: 'khop', n, ten: n.ten, mo: 'Không đổi' });
+    const r = { key, viec: 'doi', n, ten: n.ten, goc, ls, tra, cu, d: goc - cu, doiTT, dTien: kt ? 0 : goc - cu };
+    const ch = NX.chon[key] || {}; r.cach = r.dTien ? (ch.cach || 'tien') : 'gia'; r.vi = ch.vi || viGanNhat();
+    if (r.cach === 'tien') them(r.vi, r.dTien);   // vay thêm: tiền vào ví · trả gốc: tiền ra
+    r.tenTien = r.dTien > 0 ? 'Vay thêm' : 'Trả gốc'; r.mo = kt ? 'Gốc đầu kỳ ' + fmtGon(cu) + ' → ' + fmtGon(goc) : (r.dTien ? 'Gốc ' + fmtGon(cu) + ' → ' + fmtGon(goc) : 'Đổi lãi suất / trả hằng tháng');
+    ke.no.push(r);
+  });
+  // Ví (tính sau cùng để biết tiền ra/vào do tài sản, nợ)
+  viRow.forEach(o => {
+    const sd = tienNX(o[3]); if (sd == null) return ke.bo.push({ ten: o[0], ly: 'Dòng ' + o.dong + ' trang Ví: thiếu Số dư' });
+    const loai = loaiViNX(o[1]); if (!loai) return ke.bo.push({ ten: o[0], ly: 'Dòng ' + o.dong + ': Loại "' + o[1] + '" chưa rõ (Tiền mặt, Ngân hàng, Tiết kiệm, Ví điện tử, Chứng khoán)' });
+    const chu = chuNX(o[2]), v = timTen('Vi', o[0]), key = 'vi:' + boDau(o[0]);
+    if (!v) return ke.vi.push({ key, viec: 'them', ten: o[0], loai, chu, sd, mo: 'Thêm · ' + LOAI_VI[loai] + ' · ' + CHU[chu] });
+    if (kt) { const cu = so(v.so_du_dau_ky); return ke.vi.push({ key, viec: cu === sd && v.loai === loai && v.chu === chu ? 'khop' : 'doi', v, ten: v.ten, loai, chu, sd, cu, mo: cu === sd ? 'Không đổi' : 'Số dư đầu kỳ ' + fmtGon(cu) + ' → ' + fmtGon(sd) }); }
+    if (soDuVi(v, ngay) == null) return ke.bo.push({ ten: v.ten, ly: 'Ví này bắt đầu từ ' + ngayVN(v.ngay_so_du) + ', sau ngày số liệu' });
+    const tinh = soDuVi(v, ngay) + (dongTien[v.ma] || 0), ch = sd - tinh;
+    ke.vi.push({ key, viec: ch ? 'lech' : 'khop', v, ten: v.ten, sd, tinh, ch, loai, chu, mo: ch ? 'Sổ ' + fmtGon(tinh) + ' · thật ' + fmtGon(sd) : 'Khớp' });
+  });
+  return ke;
+}
+
+// ── Vẽ xem trước ──
+function veNhapExcel() {
+  const qt = laQT();
+  $('nx-vo').classList.toggle('an', qt); $('nx-qt').classList.toggle('an', !qt);
+  $('nx-chon').className = NX.trang ? 'nut-vien' : 'nut-chinh'; $('nx-chon').textContent = NX.trang ? 'Chọn file khác…' : 'Chọn file đã điền…';
+  $('nx-ve').classList.toggle('an', soSanSang());
+  if (!NX.trang) { $('nx-xem').innerHTML = ''; return; }
+  const ke = NX.ke = lapKeHoachNX(), dem = (ds_, v) => ds_.filter(x => x.viec === v).length;
+  const soThem = dem(ke.vi, 'them') + dem(ke.ts, 'them') + dem(ke.no, 'them'), soLech = dem(ke.vi, 'lech'), soDoi = dem(ke.ts, 'doi') + dem(ke.no, 'doi') + dem(ke.vi, 'doi');
+  const soKhop = ke.kt ? 0 : dem(ke.vi, 'khop') + ke.ts.filter(x => x.xacNhan).length, tong = soThem + soLech + soDoi + soKhop;
+  const tuyVi = chon => ds('Vi').filter(v => v.trang_thai !== 'DA_DONG').map(v => '<option value="' + esc(v.ma) + '"' + (v.ma === chon ? ' selected' : '') + '>' + esc(v.ten) + '</option>').join('');
+  const dong = (x, phai) => '<div class="dong"><div class="giua"><div class="ten">' + ({ them: '✚ ', lech: '⚠ ', doi: '🏷 ', khop: '✓ ' }[x.viec] || '') + esc(x.ten) + '</div><div class="phu">' + esc(x.mo) + '</div>' +
+    (x.dTien && !ke.kt ? '<div class="nx-cach"><select data-nx-cach="' + esc(x.key) + '"><option value="tien"' + (x.cach === 'tien' ? ' selected' : '') + '>' + x.tenTien + ' ' + fmtGon(Math.abs(x.dTien)) + (x.tenTien.match(/Thu|Vay|Bán/) ? ' vào' : ' từ') + ' ví</option><option value="gia"' + (x.cach === 'gia' ? ' selected' : '') + '>' + (x.n ? 'Chỉ sửa con số' : 'Chỉ đổi giá (không có tiền ra vào)') + '</option></select>' +
+      (x.cach === 'tien' ? '<select data-nx-vi="' + esc(x.key) + '">' + tuyVi(x.vi) + '</select>' : '') + '</div>' : '') + '</div>' + (phai || '') + '</div>';
+  const nhom = (ten, ds_, mo, phai) => ds_.length ? '<details class="the nx-nhom"' + (mo ? ' open' : '') + '><summary><b>' + ten + '</b> <span class="mo">· ' + ds_.length + '</span></summary>' + ds_.map(x => dong(x, phai && phai(x))).join('') + '</details>' : '';
+  $('nx-xem').innerHTML =
+    '<div class="the"><h2>Xem trước · ' + esc(NX.tep) + '</h2>' +
+    (ke.kt ? '<p class="ghi-chu-nho" style="margin-top:-6px">Sổ đang thiết lập: số trong file là <b>số dư, giá trị đầu kỳ</b> tại ngày bắt đầu ' + ngayVN(ke.ngay) + '.</p>'
+      : '<div class="truong" style="margin-top:0"><label for="nx-ngay">Số liệu tại ngày</label><input id="nx-ngay" type="date" value="' + esc(ke.ngay) + '" max="' + homNay() + '" min="' + esc((KHO.so || {}).ngay_bat_dau || '') + '"></div>') +
+    '<p class="trang-thai" style="margin-top:10px">' + [soThem ? '<span class="xanh">✚ ' + soThem + ' thêm mới</span>' : '', soDoi ? '🏷 ' + soDoi + ' đổi số' : '', soLech ? '<span class="vang">⚠ ' + soLech + ' ví lệch</span>' : '', soKhop ? '✓ ' + soKhop + ' khớp, giữ giá' : '', ke.bo.length ? '<span class="do">✕ ' + ke.bo.length + ' dòng bỏ qua</span>' : ''].filter(Boolean).join(' · ') + (tong ? '' : 'Không có gì thay đổi') + '</p></div>' +
+    nhom('Ví', ke.vi, true, x => x.viec === 'lech' ? '<div class="so-tien vang">' + (x.ch > 0 ? '+' : '') + fmtGon(x.ch) + '</div>' : '<div class="so-tien">' + fmtGon(x.sd) + '</div>') +
+    nhom('Tài sản', ke.ts, ke.ts.some(x => x.viec !== 'khop'), x => '<div class="so-tien">' + fmtGon(x.moi) + '</div>') +
+    nhom('Nợ', ke.no, ke.no.some(x => x.viec !== 'khop'), x => '<div class="so-tien do">' + fmtGon(x.goc != null ? x.goc : gocNo(x.n)) + '</div>') +
+    (ke.bo.length ? '<details class="the nx-nhom" open><summary><b class="do">Dòng bỏ qua</b> <span class="mo">· ' + ke.bo.length + '</span></summary>' + ke.bo.map(b => '<div class="dong"><div class="giua"><div class="ten">' + esc(b.ten) + '</div><div class="phu">' + esc(b.ly) + '</div></div></div>').join('') + '</details>' : '') +
+    (soLech ? '<p class="ghi-chu-nho" style="margin:0 0 8px">Ví lệch: app ghi một khoản "Chênh lệch chưa rõ" cho khớp tiền thật. Lệch do mua bán, cho mượn thì chọn cách ghi ở dòng tài sản tương ứng.</p>' : '') +
+    '<div class="loi" id="nx-loi"></div><button class="nut-chinh" id="nx-ap"' + (tong ? '' : ' disabled') + '>Áp dụng ' + tong + ' thay đổi</button>' +
+    '<button class="nut-phu" id="nx-huy">Huỷ</button>';
+}
+
+// ── Áp dụng: dựng toàn bộ bản ghi rồi gửi một lần ──
+async function apDungNX() {
+  const ke = NX.ke = lapKeHoachNX(), ngay = ke.ngay, loi = m => { $('nx-loi').textContent = m; };
+  if (!ngay) return loi('Lưu ngày bắt đầu sổ (khối 1) trước khi nhập Excel');
+  if (!ke.kt && ((KHO.so && ngay < KHO.so.ngay_bat_dau) || ngay > homNay())) return loi('Ngày số liệu phải từ ngày bắt đầu sổ tới hôm nay');
+  if (!ke.kt && kyDaKhoa(ngay)) return loi(chuThang(ngay.slice(0, 7)) + ' đã khoá. Mở khoá ở Chốt tháng');
+  const ghi = [], goc = Date.now(); let k = 0;
+  const lucTao = () => new Date(goc + (k++)).toISOString();
+  const add = (bang, banGhi) => { banGhi = Object.assign({ ma: taoMa() }, banGhi); if (!banGhi.luc_tao) banGhi.luc_tao = lucTao(); banGhi.luc_sua = banGhi.luc_sua || new Date(goc + 100000 + k).toISOString(); ghi.push({ bang, banGhi }); return banGhi; };
+  const gd = (loai, so_tien, vi, them) => { const g = { loai, so_tien: Math.abs(so_tien), ngay, nguoi: toi(), ghi_chu: 'Nhập Excel', nguon: 'NHAP_FILE' }; if (VAO[loai]) g.vi_den = vi; else g.vi_di = vi; return add('GiaoDich', Object.assign(g, them)); };
+  const nhom = l => NHOM_LOP[l][0];
+  // Tài sản
+  for (const x of ke.ts) {
+    if (x.viec === 'them') {
+      const t = add('TaiSan', { ten: x.ten, lop: x.lop, kieu: x.kieu, nhom: x.kieu === 'PHAI_THU' ? 'Phải thu (cho vay)' : nhom(x.lop), chu: 'CHUNG', so_luong: x.sl ? String(x.sl) : '', don_vi: x.sl ? x.dv : '', trang_thai: 'DANG_GIU' });
+      add('DinhGia', { ma: 'dk_' + t.ma, tai_san: t.ma, ngay, gia_tri: x.moi, nguon: 'DAU_KY', ghi_chu: ke.kt ? '' : 'Khai bổ sung từ Excel' + (x.gdv ? ' · giá 1 ' + x.dv + ' ' + fmtDu(x.gdv) : '') });
+      continue;
+    }
+    if (x.xacNhan) { add('DinhGia', { tai_san: x.t.ma, ngay, gia_tri: x.moi, nguon: 'DINH_GIA_LAI', ghi_chu: 'Giữ giá (nhập Excel)' }); continue; }
+    if (x.viec !== 'doi') continue;
+    if (x.doiTT) add('TaiSan', Object.assign({}, x.t, { lop: x.lop, so_luong: x.sl ? String(x.sl) : x.t.so_luong || '', don_vi: x.sl ? x.dv : x.t.don_vi || '' }));
+    if (ke.kt) { const m = ds('DinhGia').find(d => d.tai_san === x.t.ma && d.nguon === 'DAU_KY'); add('DinhGia', Object.assign({}, m || { ma: 'dk_' + x.t.ma, tai_san: x.t.ma, nguon: 'DAU_KY' }, { ngay, gia_tri: x.moi, luc_tao: m ? m.luc_tao : undefined })); continue; }
+    let sau = x.cu;
+    if (x.cach === 'tien' && x.dTien) {
+      if (x.t.kieu === 'PHAI_THU') { gd(x.dTien > 0 ? 'CHO_VAY' : 'THU_NO', x.dTien, x.vi, { tai_san: x.t.ma }); sau = x.cu + x.dTien; }
+      else if (x.dTien > 0) { gd('MUA_TS', x.dTien, x.vi, { tai_san: x.t.ma }); sau = x.cu + x.dTien; }
+      else { const b = gd('BAN_TS', x.dTien, x.vi, { tai_san: x.t.ma }); add('DinhGia', { ma: 'db_' + b.ma, tai_san: x.t.ma, ngay, gia_tri: x.moi, nguon: 'SAU_BAN', ghi_chu: 'Bán ' + fmtDu(-x.dTien) + ' (nhập Excel)' }); sau = x.moi; }
+    }
+    if (sau !== x.moi) add('DinhGia', { tai_san: x.t.ma, ngay, gia_tri: x.moi, nguon: 'DINH_GIA_LAI', ghi_chu: 'Nhập Excel' + (x.gdv && x.sl ? ' · giá 1 ' + (x.dv || donVi(x.t)) + ' ' + fmtDu(x.gdv) : '') });
+  }
+  // Nợ
+  for (const x of ke.no) {
+    if (x.viec === 'them') { add('KhoanNo', { ten: x.ten, goc_dau_ky: x.goc, ngay, lai_suat: x.ls, tra_du_kien: x.tra, nguoi_vay: 'CHUNG', muc_dich: 'TAO_TAI_SAN', trang_thai: 'DANG_NO' }); continue; }
+    if (x.viec !== 'doi') continue;
+    if (ke.kt) { add('KhoanNo', Object.assign({}, x.n, { goc_dau_ky: x.goc, lai_suat: x.ls, tra_du_kien: x.tra })); continue; }
+    if (x.doiTT) add('KhoanNo', Object.assign({}, x.n, { lai_suat: x.ls, tra_du_kien: x.tra }));
+    if (x.dTien && x.cach === 'tien') gd(x.dTien > 0 ? 'VAY' : 'TRA_GOC', x.dTien, x.vi, { khoan_no: x.n.ma });
+    else if (x.dTien) add('KhoanNo', Object.assign({}, x.n, { goc_dau_ky: so(x.n.goc_dau_ky) + x.dTien, lai_suat: x.ls, tra_du_kien: x.tra }));
+  }
+  // Ví
+  const dmLech = l => (ds('DanhMuc').find(d => d.nhom_con === 'CHENH_LECH_CHUA_RO' && d.nhom === l) || {}).ma;
+  for (const x of ke.vi) {
+    if (x.viec === 'them') { add('Vi', { ten: x.ten, loai: x.loai, chu: x.chu, so_du_dau_ky: x.sd, ngay_so_du: ngay, trang_thai: 'DANG_DUNG' }); continue; }
+    if (ke.kt) { if (x.viec === 'doi') add('Vi', Object.assign({}, x.v, { so_du_dau_ky: x.sd, loai: x.loai, chu: x.chu, ngay_so_du: ngay })); continue; }
+    if (x.viec === 'lech') {
+      const g = gd(x.ch < 0 ? 'CHI' : 'THU', x.ch, x.v.ma, { danh_muc: dmLech(x.ch < 0 ? 'CHI' : 'THU'), ghi_chu: 'Bù đối soát (nhập Excel)', nguon: 'BU_DOI_SOAT', nguoi: x.v.chu === 'VO' ? 'VO' : x.v.chu === 'CHONG' ? 'CHONG' : toi() });
+      add('DoiSoat', { vi: x.v.ma, ngay, so_du_tinh: x.tinh, so_du_thuc: x.sd, chenh_lech: x.ch, xu_ly: 'CHUA_RO', giao_dich_bu: g.ma });
+    } else if (x.viec === 'khop') add('DoiSoat', { vi: x.v.ma, ngay, so_du_tinh: x.tinh, so_du_thuc: x.sd, chenh_lech: 0, xu_ly: 'KHOP' });
+  }
+  if (!ghi.length) return loi('Không có gì để áp dụng');
+  const b = $('nx-ap'); b.disabled = true; b.textContent = 'Đang lưu ' + ghi.length + ' dòng…';
+  try {
+    const r = await goi('luuNhieu', { ds: ghi.map(x => { const b = Object.assign({}, x.banGhi, { luc_sua: new Date().toISOString() }); Object.keys(b).forEach(k => (k.startsWith('_') || b[k] === undefined) && delete b[k]); return { bang: x.bang, banGhi: b }; }) });
+    await taiLai();
+    NX.trang = null; NX.chon = {}; veNhapExcel();
+    if (r.soLoi) { const loiDau = r.kq.map((x, i) => x.ok ? '' : ghi[i].banGhi.ten || ghi[i].bang).filter(Boolean); toast('Đã lưu ' + (r.soDong - r.soLoi) + '/' + r.soDong + ' dòng. Chưa lưu: ' + loiDau.slice(0, 3).join(', ') + ' – ' + (r.kq.find(x => !x.ok) || {}).loi); }
+    else toast('Đã áp dụng ' + r.soDong + ' dòng từ Excel');
+    if (laKhoiTaoNX()) diToi('s2');
+  } catch (e) { loi(e.message); b.disabled = false; b.textContent = 'Áp dụng lại'; }
+}
+async function chonTepNX(f) {
+  if (!f) return;
+  try { NX.trang = await docXlsx(await f.arrayBuffer()); NX.tep = f.name; NX.chon = {}; veNhapExcel(); setTimeout(() => $('nx-xem').scrollIntoView({ block: 'start', behavior: 'smooth' }), 30); }
+  catch (e) { toast(e.message || 'Không đọc được tệp'); }
+}
+
 /* ═════════ Gắn sự kiện cho phần hoàn thiện ═════════ */
 $('hd-tim').addEventListener('input', timHuongDan);
 Object.assign(VE_MAN, { huongdan: veHuongDan, taisan: veS10, tsct: veS12, noct: veS13, chiatien: veS14, xuhuong: veS18, chotky: veS19, doisoat: veS20, kaizen: veS21, caidat: veS22, saoluu: veS23, ngan: () => veS17(), tuanhoan: () => veS16(), ngansach: () => veS9(), baocao: () => veS8() });
 $('nut-menu').addEventListener('click', moMenu);
+VE_MAN.nhapexcel = veNhapExcel;
+$('nx-mau').addEventListener('click', taiMauExcel);
+$('nx-chon').addEventListener('click', () => $('nx-tep').click());
+$('nx-tep').addEventListener('change', () => { const f = $('nx-tep').files[0]; $('nx-tep').value = ''; chonTepNX(f); });
+$('nx-ve').addEventListener('click', () => diToi('s2'));
+$('nx-xem').addEventListener('change', e => { const t = e.target;
+  if (t.id === 'nx-ngay') return veNhapExcel();
+  const c = t.dataset.nxCach || t.dataset.nxVi; if (!c) return;
+  NX.chon[c] = Object.assign(NX.chon[c] || {}, t.dataset.nxCach ? { cach: t.value } : { vi: t.value }); veNhapExcel(); });
+$('nx-xem').addEventListener('click', e => { if (e.target.id === 'nx-ap') apDungNX(); if (e.target.id === 'nx-huy') { NX.trang = null; NX.chon = {}; veNhapExcel(); window.scrollTo(0, 0); } });
 $('s10-loc-dg').addEventListener('click', () => locS11('dg'));
+$('s10-gia-dv').addEventListener('click', moFormGiaDonVi);
 $('s13-tra').addEventListener('click', () => moS6(null, { tab: 'KHAC', loai: 'TRA_NO', no: S13.ma }));
 $('s13-sua').addEventListener('click', () => moFormNo(S13.ma));
 $('s15-kieu').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S15.kieu = b.dataset.k; veS15(); });
