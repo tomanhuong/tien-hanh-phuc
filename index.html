@@ -212,17 +212,31 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
 .buoc-chot .noi b{font-weight:600;font-size:1.02rem}
 .buoc-chot .noi p{font-size:.9rem;color:var(--txt2)}
 .buoc-chot .nut{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.hd details{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;padding:0 16px}
-.hd summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:1.05rem;list-style:none;display:flex;gap:8px;align-items:center}
+.hd-gd{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;padding:0 14px}
+.hd summary{cursor:pointer;list-style:none;display:flex;gap:10px;align-items:center}
 .hd summary::-webkit-details-marker{display:none}
-.hd summary::after{content:'›';margin-left:auto;color:var(--txt3);transition:transform .15s}
-.hd details[open] summary::after{transform:rotate(90deg)}
-.hd details[open]{padding-bottom:12px}
+.hd summary::after{content:'›';margin-left:auto;color:var(--txt3);transition:transform .15s;font-size:1.2rem}
+.hd details[open]>summary::after{transform:rotate(90deg)}
+.hd-gd>summary{padding:14px 0;font-weight:600;font-size:1.1rem}
+.hd summary small{display:block;font-family:var(--mono);font-size:10.5px;color:var(--txt3);font-weight:400;letter-spacing:.02em}
+.hd-ico{font-size:1.3rem;width:28px;text-align:center}
+.hd-dem{font-family:var(--mono);font-size:11px;color:var(--warn)}.hd-dem.xong{color:var(--ok)}
+.hd-buoc{border-top:1px solid var(--line2)}
+.hd-buoc>summary{padding:11px 0;font-size:1.02rem}
+.hd-buoc[open]{padding-bottom:12px}
+.hd-so{flex-shrink:0;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;background:var(--card2);border:1px solid var(--line)}
+.hd-so.xong{background:var(--teal-bg);border-color:var(--teal);color:var(--ok)}
+.hd small.hd-tt{color:var(--ok)}
 .hd p,.hd li{font-size:1rem;line-height:1.5;margin-top:6px}
-.hd ol,.hd ul{padding-left:20px}
+.hd ol,.hd ul{padding-left:22px}
 .hd .bang{margin-top:8px}
-.hd-nhanh td:last-child{text-align:right}
-.hd-nhanh button{color:var(--ok);font-size:11.5px;white-space:nowrap}
+.hd-vi{background:rgba(255,212,0,.06);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0}
+.hd-them{margin-top:8px;font-size:.95rem;color:var(--txt2)}
+.hd-xong{color:var(--txt)}
+.hd-nut{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.hd-nut .nut-nho{white-space:normal;text-align:left;line-height:1.35}
+.hd-tiep{padding:10px 0;border-top:1px solid var(--line2)}
+.hd-tiep-ten{display:flex;gap:10px;align-items:center;font-size:1.08rem}
 .menu-ds button{display:flex;width:100%;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line2);font-family:var(--serif);font-size:1.05rem;text-align:left}
 .menu-ds button:last-child{border-bottom:none}
 .menu-ds button .i{width:28px;text-align:center;font-size:1.1rem}
@@ -294,6 +308,7 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
     <section class="man" id="man-s2">
       <div id="s2-cho" class="the an"><h2>Thiết lập sổ</h2><p class="mo-ta">Chờ chồng thiết lập sổ.</p></div>
       <div id="s2-qt" class="an">
+        <div class="banner ngoc"><span class="chu">📖 Mới dùng? Xem từng bước: vì sao làm, bấm vào đâu, xong thấy gì.</span><button data-menu="huongdan">Hướng dẫn ›</button></div>
         <div class="the">
           <h2><span class="buoc">1</span>Sổ của nhà mình</h2>
           <div class="truong"><label for="s2-ten">Tên sổ</label><input id="s2-ten" maxlength="40"></div>
@@ -547,297 +562,185 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
         <p class="ghi-chu-nho" style="margin:-6px 0 8px">Một tệp Excel 4 trang: Giao dịch · Tài sản · Khoản nợ · Chỉ số theo tháng. Dữ liệu gốc vẫn nằm trong Google Sheet của anh.</p>
         <button class="nut-vien" style="margin-top:0" id="s23-xuat">Tải bảng tính (.xlsx)</button></div>
     </section>
-    <!-- Hướng dẫn sử dụng -->
+    <!-- Hướng dẫn sử dụng (v2: đi theo dòng chảy cho người mới) -->
     <section class="man" id="man-huongdan">
-      <div class="the">
-        <h2>Tìm nhanh</h2>
-        <input class="o-tim" style="margin-top:0" id="hd-tim" placeholder="VD: xoá khoản, quên mã, đối soát…" inputmode="search">
-        <p class="ghi-chu-nho" id="hd-kq" style="margin-top:4px"></p>
+      <div class="the hd-dau">
+        <h2>Bắt đầu từ đây</h2>
+        <div id="hd-tien-do"></div>
       </div>
-      <div class="the">
-        <h2>Tôi muốn…</h2>
-        <table class="bang hd-nhanh">
-          <tr><td>Ghi một khoản chi, thu</td><td><button data-hd="ghi">Nút vàng ＋ Ghi ›</button></td></tr>
-          <tr><td>Sửa, xoá khoản đã ghi</td><td><button data-hd="sua">Tab Sổ ›</button></td></tr>
-          <tr><td>Thêm, sửa, xoá loại thu chi</td><td><button data-hd="danhmuc">Ô ✎ ở màn Ghi ›</button></td></tr>
-          <tr><td>Biết tháng này tiêu bao nhiêu</td><td><button data-hd="baocao">Tab Báo cáo ›</button></td></tr>
-          <tr><td>Đặt mức chi tối đa</td><td><button data-hd="ngansach">Ngân sách ›</button></td></tr>
-          <tr><td>Biết tài chính đang khoẻ hay yếu</td><td><button data-hd="ngan">4 ngăn ›</button></td></tr>
-          <tr><td>Xem tài sản, chia tiền đầu tư</td><td><button data-hd="thap">Tab Tài sản ›</button></td></tr>
-          <tr><td>Khớp số dư với tiền thật</td><td><button data-hd="doisoat">☰ Đối soát ›</button></td></tr>
-          <tr><td>Chốt sổ cuối tháng</td><td><button data-hd="chot">☰ Chốt tháng ›</button></td></tr>
-          <tr><td>Quên mã khoá, app báo lỗi</td><td><button data-hd="suco">Khi gặp sự cố ›</button></td></tr>
-        </table>
-      </div>
-      <div class="the">
-        <h2>Nhịp dùng app</h2>
-        <table class="bang">
-          <tr><td><b>Mỗi ngày</b> · 1 phút</td><td>Ghi chi, thu ngay khi tiêu. Từ 9 giờ tối, Nhà mình nhắc xem còn khoản nào.</td></tr>
-          <tr><td><b>Chủ nhật</b> · 2 phút</td><td>Đối soát ví: nhập số dư thật của từng ví.</td></tr>
-          <tr><td><b>Đầu tháng</b> · 15 phút</td><td>Chốt tháng trước · đặt ngân sách tháng mới · xem 4 ngăn.</td></tr>
-          <tr><td><b>Đầu quý</b> · 20 phút</td><td>Định giá lại tài sản · xem tháp · chia tiền để dành vào lớp thiếu.</td></tr>
-        </table>
-      </div>
-
+      <input class="o-tim" style="margin:0 0 4px" id="hd-tim" placeholder="Tìm: tạo ví, xoá khoản, quên mã…" inputmode="search">
+      <p class="ghi-chu-nho" id="hd-kq" style="margin:0 0 8px"></p>
       <div class="hd">
-        <details id="hd-tongquan"><summary>Tổng quan: app có gì, ở đâu</summary>
-          <p>Sổ tài chính chung của hai vợ chồng. Mỗi người đăng nhập trên máy riêng, ghi phần của mình; <b>Gia đình = Vợ + Chồng</b>. Dữ liệu nằm trong Google Sheet của anh, app chỉ là cửa để ghi và xem.</p>
-          <table class="bang">
-            <tr><td><b>Nhà mình</b></td><td>Sức khoẻ 4 ngăn · thu, chi, để dành tháng này · của cải thật · khoản ghi gần đây · lời nhắc</td></tr>
-            <tr><td><b>Sổ</b></td><td>Lịch tháng, mỗi ngày chi bao nhiêu · tìm, sửa, xoá khoản</td></tr>
-            <tr><td><b>＋ Ghi</b></td><td>Ghi một khoản mới</td></tr>
-            <tr><td><b>Báo cáo</b></td><td>Thu chi theo ngày, tuần, tháng, quý, năm · Vợ / Chồng / Gia đình · Ngân sách</td></tr>
-            <tr><td><b>Tài sản</b></td><td>Tháp 5 lớp · ví · tài sản · khoản nợ · chia tiền mới</td></tr>
-            <tr><td><b>☰</b> (góc phải)</td><td>Chốt tháng · Đối soát ví · Kaizen · Xu hướng · Cài đặt · Sao lưu &amp; xuất · Hướng dẫn · Thoát</td></tr>
-            <tr><td><b>⟳</b> (góc phải)</td><td>Lấy số mới nhất (khi người kia vừa ghi)</td></tr>
-          </table>
+        <details class="hd-gd" id="hdg-dau"><summary><span class="hd-ico">🚀</span><span>Ngày đầu<small>làm 1 lần · 20 phút · bước 1–6</small></span><span class="hd-dem" data-hd-dem="dau"></span></summary>
+          <details class="hd-buoc" id="hd-b1" data-buoc="1"><summary><span class="hd-so" data-hd-so="1">1</span><span>Vào app lần đầu</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Mỗi người có mã khoá riêng, nên sổ chỉ hai vợ chồng mở được, và app biết ai đang ghi.</p>
+            <ol><li>Mở app → chọn <b>Chồng</b> → bấm <b>Lần đầu dùng? Kích hoạt</b>.</li><li>Nhập <b>mã kích hoạt 6 số</b>. Chồng lấy mã trong Apps Script (hàm <i>khoiTao</i>); vợ nhận mã do chồng tạo ở bước 5.</li><li>Đặt <b>mã khoá</b> 6–8 số, nhập lại lần nữa → <b>Kích hoạt và vào sổ</b>.</li><li>Đưa app ra màn hình chính: iPhone: Safari → nút Chia sẻ → <i>Thêm vào MH chính</i>. Android: Chrome → ⋮ → <i>Thêm vào màn hình chính</i>.</li></ol>
+            <div class="hd-them">Lần sau mở app chỉ cần nhập mã khoá. Máy nhớ 30 ngày.</div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> màn <b>Thiết lập sổ</b> có 4 khối đánh số.</p>
+            <div class="hd-nut"><button class="nut-nho" data-hd-mo="2">Tiếp: 2 · Khai sổ ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b2" data-buoc="2"><summary><span class="hd-so" data-hd-so="2">2</span><span>Khai sổ: tên, ngày bắt đầu, mục tiêu để dành<small>Chồng</small></span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> <b>Ngày bắt đầu</b> là mốc của cả sổ: mọi số dư, giá trị đầu kỳ tính tại ngày này, và không ghi được khoản nào trước ngày này. <b>Mục tiêu để dành</b> dùng để gợi ý ngân sách và chấm ngăn Chi phí.</p>
+            <ol><li>Ở khối <b>1 · Sổ của nhà mình</b>: gõ tên sổ, tên chồng, tên vợ.</li><li><b>Ngày bắt đầu ghi sổ</b>: chọn ngày 1 của tháng muốn bắt đầu theo dõi (VD 01/10). Vào sổ rồi thì ngày này không đổi được nữa.</li><li><b>Mục tiêu để dành</b>: phần trăm thu nhập muốn giữ lại mỗi tháng (gợi ý 30).</li><li>Bấm <b>Lưu thông tin sổ</b>.</li></ol>
+            
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> thông báo "Đã lưu", các khối 2–4 mở ra.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="so">Mở Thiết lập sổ ›</button><button class="nut-nho" data-hd-mo="3">Tiếp: 3 · Tạo ví ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b3" data-buoc="3"><summary><span class="hd-so" data-hd-so="3">3</span><span>Tạo ví: mọi nơi đang giữ tiền<small>Chồng</small></span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Mỗi khoản chi, thu phải nói tiền ra, vào <b>ví nào</b>. Nhờ vậy app tự tính số dư từng ví, biết tiền đang nằm đâu, và sau này so được với tiền thật để bắt khoản quên ghi. Tổng tiền trong ví cũng là quỹ khẩn cấp của nhà mình.</p>
+            <ol><li>Ở khối <b>2 · Ví và số dư đầu kỳ</b> bấm <b>＋ Thêm ví</b>. (Sổ đã dùng rồi: tab <b>Tài sản</b> → <b>＋ Ví</b>.)</li><li><b>Tên ví</b>: tên dễ nhận ra, VD "Techcombank chồng", "Tiền mặt vợ".</li><li><b>Loại</b>: Tiền mặt, Ngân hàng, Tài khoản chứng khoán, Ví điện tử hoặc Tiết kiệm. <b>Của</b>: Chồng, Vợ hoặc Chung.</li><li><b>Số dư đầu kỳ</b>: số tiền thật trong ví <b>vào ngày bắt đầu sổ</b> (xem app ngân hàng, đếm tiền mặt). Ví trống thì nhập 0.</li><li>Bấm <b>Lưu</b>. Làm lại cho từng ví: mỗi tài khoản ngân hàng, tiền mặt của mỗi người, ví điện tử, sổ tiết kiệm.</li></ol>
+            <div class="hd-them">Sổ tiết kiệm khai là <b>ví</b> (loại Tiết kiệm), không khai ở tài sản. Thiếu ví nào cũng được thêm sau.</div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> mỗi ví một dòng kèm số dư bên phải.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="vi">Tạo ví ›</button><button class="nut-nho" data-hd-mo="4">Tiếp: 4 · Khai tài sản và nợ (bỏ qua được) ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b4" data-buoc="4"><summary><span class="hd-so" data-hd-so="4">4</span><span>Khai tài sản và nợ (bỏ qua được)<small>Chồng</small></span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Để app tính <b>Của cải thật</b> (có − nợ), vẽ <b>tháp tài sản</b>, và chấm 2 ngăn Nợ, Tài sản. Chưa khai thì 2 ngăn này hiện xám.</p>
+            <ol><li>Ở khối <b>3 · Tài sản và nợ</b> bấm <b>＋ Tài sản</b>: tên, <b>lớp tháp</b> (bảng bên dưới), giá trị tại ngày bắt đầu sổ → <b>Lưu</b>.</li><li>Tiền cho người khác vay: <b>Kiểu</b> = <i>Cho vay (phải thu)</i>.</li><li>Bấm <b>＋ Khoản nợ</b>: tên, gốc còn nợ tại ngày bắt đầu, lãi suất %/năm, trả dự kiến mỗi tháng → <b>Lưu</b>.</li><li>Bấm <b>Xong, vào sổ</b> (cần ít nhất 1 ví).</li></ol>
+            <div class="hd-them"><table class="bang"><tr><td>2 · Bảo vệ</td><td>vàng, ngoại tệ, cho vay, bảo hiểm tích luỹ</td></tr><tr><td>3 · Tạo thu nhập</td><td>cổ phần có cổ tức, nhà cho thuê, trái phiếu</td></tr><tr><td>4 · Tăng trưởng</td><td>cổ phiếu, ETF, đất để lâu</td></tr><tr><td>5 · Mạo hiểm</td><td>tiền điện tử, phái sinh</td></tr><tr><td>1 · Vô hình</td><td>kiến thức, sức khoẻ (không cộng vào tổng)</td></tr></table></div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> màn <b>Nhà mình</b> có 4 ô ngăn và số <b>Của cải thật</b>.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="xong">Khai tài sản ›</button><button class="nut-nho" data-hd-mo="5">Tiếp: 5 · Mời vợ cùng ghi ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b5" data-buoc="5"><summary><span class="hd-so" data-hd-so="5">5</span><span>Mời vợ cùng ghi<small>Chồng</small></span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Mỗi người ghi phần mình trên máy mình, ngay khi tiêu. Báo cáo tách được <b>Vợ</b>, <b>Chồng</b>, và cộng lại thành <b>Gia đình</b>.</p>
+            <ol><li>Chồng: ☰ → <b>Cài đặt</b> → khối <b>Hai vợ chồng</b> → <b>Tạo mã mời vợ</b>. (Lúc thiết lập sổ thì ở khối 4.)</li><li>Gửi mã 6 số cho vợ (mã dùng 1 lần, hạn 7 ngày).</li><li>Vợ: mở app → chọn <b>Vợ</b> → <b>Lần đầu dùng? Kích hoạt</b> → nhập mã → đặt mã khoá riêng.</li></ol>
+            
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> Cài đặt ghi "<i>tên vợ</i> · đã vào sổ".</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="moi">Mở chỗ mời vợ ›</button><button class="nut-nho" data-hd-mo="6">Tiếp: 6 · Ghi khoản đầu tiên ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b6" data-buoc="6"><summary><span class="hd-so" data-hd-so="6">6</span><span>Ghi khoản đầu tiên</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Mọi con số trong app (báo cáo, ngân sách, 4 ngăn, tháp) đều tính từ các khoản ghi. Ghi đúng ngay từ khoản đầu.</p>
+            <ol><li>Bấm nút vàng <b>＋ Ghi</b> ở giữa thanh dưới.</li><li>Chọn <b>Chi</b> hoặc <b>Thu</b> → gõ số tiền.</li><li>Chạm một danh mục (Ăn, Đi lại, Tiền lương…). Thiếu loại nào: ô cuối <b>✎ Thêm, sửa danh mục</b>.</li><li>Xem lại <b>ví</b> và <b>ngày</b> → <b>Lưu</b>.</li></ol>
+            
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> khoản vừa ghi ở <b>Ghi gần đây</b> trên Nhà mình; Thu/Chi tháng và số dư ví đổi theo.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="ghi">Ghi khoản đầu tiên ›</button><button class="nut-nho" data-hd-mo="7">Tiếp: 7 · Ghi chi, thu mỗi ngày ›</button></div>
+          </details>
         </details>
-
-        <details id="hd-batdau"><summary>Lần đầu dùng: kích hoạt, thiết lập sổ, mời vợ</summary>
-          <p><b>Chồng (làm 1 lần):</b></p>
-          <ol>
-            <li>Mở app → chọn <b>Chồng</b> → <b>Lần đầu dùng? Kích hoạt</b>.</li>
-            <li>Nhập mã kích hoạt 6 số (lấy trong Apps Script, hàm <i>khoiTao</i>) → đặt mã khoá 6–8 số → <b>Kích hoạt và vào sổ</b>.</li>
-            <li>Màn <b>Thiết lập sổ</b>: ① tên sổ, ngày bắt đầu, tên hai người, mục tiêu để dành · ② thêm từng <b>ví</b> kèm số dư thật hôm đó · ③ tài sản, nợ (bỏ qua được) · ④ mời vợ.</li>
-            <li>Bấm <b>Xong, vào sổ</b>. Cần ít nhất 1 ví.</li>
-          </ol>
-          <p><b>Vợ:</b> chồng vào ☰ → Cài đặt → <b>Tạo mã mời vợ</b>, gửi mã cho vợ. Vợ mở app → chọn <b>Vợ</b> → <b>Lần đầu dùng? Kích hoạt</b> → nhập mã → đặt mã khoá riêng.</p>
-          <p><b>Đưa app ra màn hình chính:</b> iPhone: Safari → nút Chia sẻ → <i>Thêm vào MH chính</i>. Android: Chrome → ⋮ → <i>Thêm vào màn hình chính</i>.</p>
-          <p class="ghi-chu-nho">Máy nhớ đăng nhập 30 ngày. Sai mã 5 lần bị khoá 5 phút.</p>
+        <details class="hd-gd" id="hdg-ngay"><summary><span class="hd-ico">✍️</span><span>Mỗi ngày<small>1 phút · bước 7</small></span><span class="hd-dem" data-hd-dem="ngay"></span></summary>
+          <details class="hd-buoc" id="hd-b7" data-buoc="7"><summary><span class="hd-so" data-hd-so="7">7</span><span>Ghi chi, thu mỗi ngày</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Ghi ngay lúc tiêu thì không quên, mất 10 giây. Để dồn cuối ngày là bắt đầu thiếu.</p>
+            <ol><li>Tiêu xong → <b>＋ Ghi</b> → số tiền → danh mục → <b>Lưu</b>. Ghi liền nhiều khoản: bấm <b>Ghi tiếp</b>.</li><li>Ghi hộ người kia: đổi ô <b>Của</b>.</li><li>Chuyển tiền giữa ví, mua vàng, vay, trả nợ: tab <b>Chuyển &amp; tài sản</b> (xem Tra cứu).</li><li>Lương, tiền nhà hằng tháng: cài <b>Khoản định kỳ</b> một lần, đến ngày app hỏi "Lương 30tr tháng này?", bấm <b>Ghi</b>.</li><li>Ghi nhầm: tab <b>Sổ</b> → chạm khoản → sửa hoặc <b>Xoá khoản này</b>.</li></ol>
+            
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> từ 9 giờ tối Nhà mình nhắc "Hôm nay đã ghi n khoản. Còn khoản nào?".</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="ghi">Ghi một khoản ›</button><button class="nut-nho" data-hd-mo="8">Tiếp: 8 · Đối soát ví ›</button></div>
+          </details>
         </details>
-
-        <details id="hd-ghi"><summary>Ghi một khoản chi, thu (10 giây)</summary>
-          <ol>
-            <li>Bấm nút vàng <b>＋ Ghi</b>.</li>
-            <li>Chọn tab <b>Chi</b> hoặc <b>Thu</b> → gõ số tiền.</li>
-            <li>Chạm một danh mục (Ăn, Đi lại, Tiền lương…).</li>
-            <li>Kiểm tra <b>Ví</b> (app nhớ ví dùng lần trước) và <b>Ngày</b> → <b>Lưu</b>.</li>
-          </ol>
-          <p>Ghi nhiều khoản liền: bấm <b>Ghi tiếp</b> trên thông báo sau khi lưu.</p>
-          <p><b>Ghi hộ người kia:</b> đổi ô <b>Của</b> thành Vợ / Chồng. Khoản đó tính vào báo cáo của người được chọn.</p>
-          <p>Ngay sau khi lưu, nếu danh mục đã dùng từ 80% ngân sách, thông báo có thêm dòng <span class="vang">⚠</span>.</p>
+        <details class="hd-gd" id="hdg-tuan"><summary><span class="hd-ico">🧮</span><span>Mỗi Chủ nhật<small>2 phút · bước 8</small></span><span class="hd-dem" data-hd-dem="tuan"></span></summary>
+          <details class="hd-buoc" id="hd-b8" data-buoc="8"><summary><span class="hd-so" data-hd-so="8">8</span><span>Đối soát ví</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Quên ghi là chuyện thường. Mỗi tuần so số dư trong sổ với tiền thật thì lệch nhỏ, còn nhớ ra khoản nào; để cả tháng thì không lần ra.</p>
+            <ol><li>☰ → <b>Đối soát ví</b> → chạm một ví.</li><li>Mở app ngân hàng hoặc đếm tiền mặt → nhập <b>Số dư thật</b>.</li><li>Khớp → bấm <b>Khớp – lưu đối soát</b>.</li><li>Lệch → nhớ ra khoản quên: <b>Ghi khoản … bị thiếu</b>. Không nhớ: <b>Ghi "Chênh lệch chưa rõ"</b> để ví khớp lại.</li></ol>
+            
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> lịch sử đối soát có dòng "✓ Khớp".</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="doisoat">Đối soát ngay ›</button><button class="nut-nho" data-hd-mo="9">Tiếp: 9 · Đặt ngân sách tháng ›</button></div>
+          </details>
         </details>
-
-        <details id="hd-chuyen"><summary>Chuyển tiền, mua bán tài sản, vay, trả nợ</summary>
-          <p>Dùng tab <b>Chuyển &amp; tài sản</b> ở màn Ghi, chọn đúng <b>Loại</b>. Những loại này <b>không</b> làm sai thu chi, vì tiền chỉ đổi chỗ.</p>
-          <table class="bang">
-            <tr><th>Loại</th><th>Khi nào</th><th>Vào thu chi?</th></tr>
-            <tr><td>Chuyển giữa ví</td><td>Rút ATM, chuyển vợ ↔ chồng, nạp ví điện tử</td><td>Không</td></tr>
-            <tr><td>Mua tài sản</td><td>Mua vàng, cổ phiếu, đất…</td><td>Không</td></tr>
-            <tr><td>Bán tài sản</td><td>Bán vàng, cổ phiếu… (nhập cả giá trị còn lại)</td><td>Không</td></tr>
-            <tr><td>Cho vay</td><td>Cho người khác mượn</td><td>Không</td></tr>
-            <tr><td>Thu nợ về</td><td>Người ta trả lại</td><td>Không</td></tr>
-            <tr><td>Vay</td><td>Vay ngân hàng, người thân</td><td>Không</td></tr>
-            <tr><td>Trả nợ (gốc + lãi)</td><td>Trả góp hằng tháng</td><td>Chỉ <b>tiền lãi</b> vào chi</td></tr>
-          </table>
-          <p class="ghi-chu-nho">Ở tab Chi, chạm "Vàng", "Cổ phiếu", "Bitcoin", "Bất động sản" thì app tự chuyển sang Mua tài sản. Chạm "Lãi vay" thì tự chuyển sang Trả nợ.</p>
+        <details class="hd-gd" id="hdg-thang"><summary><span class="hd-ico">📅</span><span>Đầu mỗi tháng<small>15 phút · bước 9–13</small></span><span class="hd-dem" data-hd-dem="thang"></span></summary>
+          <details class="hd-buoc" id="hd-b9" data-buoc="9"><summary><span class="hd-so" data-hd-so="9">9</span><span>Đặt ngân sách tháng</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Ngân sách là <b>phanh</b>: báo trước khi vượt, không phải biết sau khi đã tiêu. Ghi một khoản chạm 80% hạn mức là app báo ngay.</p>
+            <ol><li>Tab <b>Báo cáo</b> → <b>Ngân sách ›</b> → <b>Đặt ngân sách tháng …</b>.</li><li>Bấm <b>Điền theo gợi ý</b>: tổng = thu bình quân 3 tháng × (100% − mục tiêu để dành), chia theo cách nhà mình hay chi.</li><li>Sửa số nào muốn; ô để trống = không đặt hạn mức → <b>Lưu</b>.</li></ol>
+            <div class="hd-them">Tháng mới, app điền sẵn theo tháng trước.</div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> thanh màu từng danh mục: xanh đúng nhịp, vàng sắp chạm, đỏ vượt.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="ngansach">Đặt ngân sách ›</button><button class="nut-nho" data-hd-mo="10">Tiếp: 10 · Xem báo cáo tháng ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b10" data-buoc="10"><summary><span class="hd-so" data-hd-so="10">10</span><span>Xem báo cáo tháng</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Biết tiền đi đâu: danh mục nào lớn nhất, ai chi bao nhiêu, so với tháng trước tăng hay giảm.</p>
+            <ol><li>Tab <b>Báo cáo</b> → chọn kỳ (Ngày, Tuần, Tháng, Quý, Năm, Tự chọn); ‹ › để lùi, tới.</li><li>Chọn <b>Gia đình</b>, <b>Vợ</b> hoặc <b>Chồng</b>.</li><li>Chạm một danh mục → xem từng khoản.</li></ol>
+            <div class="hd-them">Chỉ tính thu, chi thật và tiền lãi vay. Mua bán tài sản, chuyển ví, cho vay, vay, trả gốc không tính.</div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> Thu · Chi · Để dành và câu so với kỳ trước.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="baocao">Mở báo cáo ›</button><button class="nut-nho" data-hd-mo="11">Tiếp: 11 · Đọc sức khoẻ 4 ngăn ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b11" data-buoc="11"><summary><span class="hd-so" data-hd-so="11">11</span><span>Đọc sức khoẻ 4 ngăn</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Báo cáo cho biết tiêu bao nhiêu; 4 ngăn cho biết <b>nên chỉnh chỗ nào</b>: Thu nhập, Chi phí, Nợ, Tài sản, mỗi ngăn một màu.</p>
+            <ol><li>Nhà mình → khối <b>Sức khoẻ 4 ngăn</b>: xem ô nào chấm đỏ.</li><li>Chạm ô đó → đọc từng chỉ số và mục <b>Nên làm gì</b>.</li><li><b>Tuần hoàn ›</b> để xem dòng tiền giữa 4 ngăn và giai đoạn tài chính (Em bé → … → Tự do).</li></ol>
+            <div class="hd-them">Chấm xám = chưa đủ số (chưa có thu, chi, tài sản hay ngân sách tháng đó).</div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> biết ngăn nào yếu và vì sao.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="ngan">Xem 4 ngăn ›</button><button class="nut-nho" data-hd-mo="12">Tiếp: 12 · Đặt Kaizen cho ngăn yếu ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b12" data-buoc="12"><summary><span class="hd-so" data-hd-so="12">12</span><span>Đặt Kaizen cho ngăn yếu</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Biết yếu mà không đặt việc cụ thể thì tháng sau vẫn yếu. Kaizen là <b>một</b> điều chỉnh nhỏ, có đích, có hạn, app tự chấm khi hết hạn.</p>
+            <ol><li>Ở ngăn đang yếu bấm <b>＋ Kaizen</b>.</li><li>Chọn chỉ số, đặt đích, chọn hạn (1–3 tháng), ghi việc sẽ làm → <b>Tạo Kaizen</b>.</li><li>Người kia bấm <b>Góp ý kiến</b> để hai vợ chồng cùng thống nhất.</li></ol>
+            
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> Kaizen nằm ở ☰ → Kaizen → <b>Đang làm</b>.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="kaizen">Mở Kaizen ›</button><button class="nut-nho" data-hd-mo="13">Tiếp: 13 · Chốt tháng trước ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b13" data-buoc="13"><summary><span class="hd-so" data-hd-so="13">13</span><span>Chốt tháng trước<small>Chồng khoá; vợ làm được bước ①</small></span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Kiểm lại một lượt rồi <b>khoá</b> để số tháng cũ không bị sửa nhầm; app chụp lại các chỉ số làm mốc so sánh.</p>
+            <ol><li>☰ → <b>Chốt tháng</b> (app mở sẵn tháng trước).</li><li>Làm 4 bước: ① đối soát mọi ví quanh cuối tháng · ② định giá tài sản quá hạn · ③ xem 4 ngăn · ④ Kaizen. Bước nào không làm được: <b>Bỏ qua</b> + ghi lý do.</li><li>Bấm <b>Khoá tháng …</b>.</li></ol>
+            <div class="hd-them">Cần sửa tháng đã khoá: <b>Mở khoá tháng này</b> + ghi lý do.</div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> "🔒 Đã khoá" và bảng ảnh chụp chỉ số.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="chot">Chốt tháng ›</button><button class="nut-nho" data-hd-mo="14">Tiếp: 14 · Định giá lại tài sản ›</button></div>
+          </details>
         </details>
-
-        <details id="hd-sua"><summary>Sửa, xoá khoản đã ghi</summary>
-          <ol>
-            <li>Vào tab <b>Sổ</b> (hoặc chạm dòng ở "Ghi gần đây" trên Nhà mình).</li>
-            <li>Chạm ngày trên lịch hoặc gõ vào ô tìm (ghi chú, danh mục, số tiền).</li>
-            <li>Chạm khoản cần sửa → đổi → <b>Lưu</b>.</li>
-            <li>Muốn xoá: bấm <b>Xoá khoản này</b> 2 lần. Lỡ tay thì bấm <b>Hoàn tác</b> trong 5 giây.</li>
-          </ol>
-          <p class="ghi-chu-nho">Vợ chỉ sửa được khoản mình ghi; chồng sửa được mọi khoản. Tháng đã khoá thì chỉ xem: mở khoá ở ☰ → Chốt tháng.</p>
+        <details class="hd-gd" id="hdg-quy"><summary><span class="hd-ico">📈</span><span>Đầu mỗi quý<small>20 phút · bước 14–15</small></span><span class="hd-dem" data-hd-dem="quy"></span></summary>
+          <details class="hd-buoc" id="hd-b14" data-buoc="14"><summary><span class="hd-so" data-hd-so="14">14</span><span>Định giá lại tài sản<small>Chồng</small></span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Giá vàng, cổ phiếu, đất thay đổi. Không cập nhật thì tổng tài sản và tháp sai. Định giá lại <b>không</b> tính vào thu nhập.</p>
+            <ol><li>Tab <b>Tài sản</b> → banner "… chưa định giá" → <b>Xem</b> (hoặc chạm một tài sản).</li><li>Bấm <b>Định giá lại</b> → nhập giá hôm nay → <b>Lưu giá mới</b>.</li></ol>
+            
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> giá mới ở đầu màn tài sản, lịch sử ghi "+… chưa thực hiện".</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="dinhgia">Xem tài sản cần định giá ›</button><button class="nut-nho" data-hd-mo="15">Tiếp: 15 · Xem tháp và chia tiền mới ›</button></div>
+          </details>
+          <details class="hd-buoc" id="hd-b15" data-buoc="15"><summary><span class="hd-so" data-hd-so="15">15</span><span>Xem tháp và chia tiền mới</span></summary>
+            <p class="hd-vi"><b>Vì sao:</b> Tiền để dành nên vào lớp đang thiếu để tháp cân, và tăng thu thụ động. App tính sẵn nên chia bao nhiêu vào đâu.</p>
+            <ol><li>Tab <b>Tài sản</b>: xem 5 tầng, % thật so với đích (viền đỏ = lệch nhiều).</li><li><b>Chia tiền mới vào tháp</b> → nhập số tiền sẵn sàng đầu tư.</li><li>App chia: giữ đủ 6 tháng chi trong ví → bù lớp thiếu → còn dư chia theo mục tiêu.</li><li>Mua thật xong bấm <b>Ghi mua</b> ở dòng đó.</li></ol>
+            <div class="hd-them">Định mua nhà, bán đất, vay lớn? Dùng <b>Thử một quyết định lớn</b> cùng màn: xem trước tháp, nợ, quỹ khẩn cấp đổi ra sao.</div>
+            <p class="hd-xong">✅ <b>Xong khi thấy:</b> tháp sau khi chia gần đích hơn.</p>
+            <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="chiatien">Chia tiền mới ›</button></div>
+          </details>
         </details>
-
-        <details id="hd-danhmuc"><summary>Thêm, sửa, xoá, sắp xếp loại thu chi (danh mục)</summary>
-          <ol>
-            <li>Bấm <b>＋ Ghi</b> → tab Chi hoặc Thu → ô cuối lưới <b>✎ Thêm, sửa danh mục</b>. (Hoặc ☰ → Cài đặt → Danh mục → <b>✎ Thêm, sửa</b>.)</li>
-            <li><b>Thêm:</b> bấm <b>＋ Thêm danh mục</b> → chọn biểu tượng, gõ tên, chọn nhóm → <b>Thêm danh mục</b>.</li>
-            <li><b>Sửa:</b> bấm <b>Sửa</b> cạnh danh mục → đổi tên, biểu tượng, nhóm → <b>Lưu</b>.</li>
-            <li><b>Sắp xếp:</b> bấm ↑ ↓ để đưa danh mục hay dùng lên đầu lưới.</li>
-            <li><b>Bỏ đi:</b> danh mục chưa có khoản nào → <b>Xoá danh mục này</b> (bấm 2 lần). Đã có khoản ghi → tích <b>Ẩn khỏi màn Ghi</b>; báo cáo cũ vẫn đúng.</li>
-          </ol>
-          <p><b>Chọn nhóm cho đúng</b>, vì nhóm quyết định 4 ngăn:</p>
-          <table class="bang">
-            <tr><td>Thu <b>Thụ động</b></td><td>Lãi, cổ tức, cho thuê → tính vào ngăn Thu nhập và giai đoạn tài chính</td></tr>
-            <tr><td>Chi <b>Phát triển bản thân</b>, <b>Sức khoẻ</b></td><td>Tính là đầu tư bản thân (lớp 1 của tháp)</td></tr>
-            <tr><td>Các nhóm chi khác</td><td>Thiết yếu, Vui chơi, Cho đi, Khác: chỉ để xem báo cáo</td></tr>
-          </table>
-          <p class="ghi-chu-nho">Chỉ chồng (quản trị) sửa được danh mục. "Lãi vay", "Chênh lệch chưa rõ" là danh mục hệ thống: chỉ đổi tên, biểu tượng.</p>
-        </details>
-
-        <details id="hd-dinhky"><summary>Khoản định kỳ (lương, tiền nhà, học phí)</summary>
-          <ol>
-            <li>☰ → Cài đặt → Khoản định kỳ → <b>＋ Định kỳ</b>.</li>
-            <li>Nhập tên, Thu/Chi, số tiền, danh mục, ví, ngày trong tháng → <b>Lưu</b>.</li>
-          </ol>
-          <p>Đến ngày, Nhà mình hỏi "Lương chồng 30tr tháng này?". Bấm <b>Ghi</b> là xong, hoặc <b>Bỏ qua</b> nếu tháng này khác. App <b>không tự ghi</b>.</p>
-        </details>
-
-        <details id="hd-baocao"><summary>Báo cáo thu chi</summary>
-          <ol>
-            <li>Tab <b>Báo cáo</b> → chọn kỳ: Ngày, Tuần, Tháng, Quý, Năm hoặc Tự chọn (tối đa 5 năm). ‹ › để lùi, tới.</li>
-            <li>Chọn <b>Gia đình</b>, <b>Vợ</b> hoặc <b>Chồng</b>.</li>
-            <li>Xem Thu · Chi · Để dành, so với kỳ trước, chi và thu theo danh mục.</li>
-            <li>Chạm một danh mục → xem từng khoản trong kỳ đó.</li>
-          </ol>
-          <p class="ghi-chu-nho">Báo cáo chỉ tính thu, chi thật và tiền lãi vay. Mua bán tài sản, chuyển ví, cho vay, vay, trả gốc không tính.</p>
-        </details>
-
-        <details id="hd-ngansach"><summary>Ngân sách và báo động chi</summary>
-          <ol>
-            <li>Báo cáo → <b>Ngân sách ›</b> → <b>Đặt ngân sách tháng…</b></li>
-            <li>Bấm <b>Điền theo gợi ý</b>: tổng = thu bình quân 3 tháng × (100% − mục tiêu để dành), chia theo cách nhà mình hay chi. Sửa lại số nào muốn → <b>Lưu</b>.</li>
-            <li>Ô để trống = danh mục đó không đặt hạn mức.</li>
-          </ol>
-          <table class="bang">
-            <tr><td><span class="mau-xanh"><span class="cham"></span></span> Xanh</td><td>Đang đúng nhịp</td></tr>
-            <tr><td><span class="mau-vang"><span class="cham"></span></span> Vàng</td><td>Đã dùng ≥ 80%, hoặc tiêu nhanh hơn số ngày đã qua của tháng</td></tr>
-            <tr><td><span class="mau-do"><span class="cham"></span></span> Đỏ</td><td>Vượt hạn mức</td></tr>
-          </table>
-          <p class="ghi-chu-nho">Báo động hiện ở: thông báo ngay sau khi ghi, banner trên Nhà mình, màn Ngân sách.</p>
-        </details>
-
-        <details id="hd-ngan"><summary>Sức khoẻ 4 ngăn và hệ tuần hoàn</summary>
-          <p>Tiền chảy qua 4 ngăn: <b>Thu nhập → Chi phí → để dành thành Tài sản → tài sản sinh thu thụ động quay về Thu nhập</b>. <b>Nợ</b> sinh lãi đổ vào Chi phí.</p>
-          <table class="bang">
-            <tr><th>Ngăn</th><th>Chấm theo (ngưỡng mặc định)</th></tr>
-            <tr><td>Thu nhập</td><td>Thu thụ động ÷ tổng thu (tốt ≥ 30%) · lợi suất lớp 3 (tốt ≥ 6%/năm)</td></tr>
-            <tr><td>Chi phí</td><td>Tỷ lệ để dành (tốt ≥ 30%) · chi cho học, sức khoẻ (≥ 10%) · ngân sách</td></tr>
-            <tr><td>Nợ</td><td>Nợ ÷ tài sản (tốt ≤ 20%) · trả nợ ÷ thu (tốt ≤ 20%)</td></tr>
-            <tr><td>Tài sản</td><td>Quỹ khẩn cấp (tốt ≥ 6 tháng chi) · số lớp tháp lệch mục tiêu</td></tr>
-          </table>
-          <ol>
-            <li>Nhà mình → chạm ô ngăn có chấm đỏ.</li>
-            <li>Đọc từng chỉ số và mục <b>Nên làm gì</b>.</li>
-            <li>Muốn cam kết sửa: bấm <b>＋ Kaizen</b>.</li>
-          </ol>
-          <p><b>Giai đoạn tài chính</b> (Em bé → Thiếu niên → Trưởng thành → An toàn → Độc lập → Tự do) tính bằng thu thụ động ÷ chi phí. Xem đích của giai đoạn kế tiếp ở <b>Tuần hoàn ›</b>.</p>
-          <p class="ghi-chu-nho">Chấm xám = chưa đủ số (chưa có thu, chi, tài sản hay ngân sách tháng đó).</p>
-        </details>
-
-        <details id="hd-thap"><summary>Tháp tài sản và định giá lại</summary>
-          <table class="bang">
-            <tr><td>5 · Mạo hiểm</td><td>Tiền điện tử, phái sinh… · đích 0–10%</td></tr>
-            <tr><td>4 · Tăng trưởng</td><td>Cổ phiếu tăng trưởng, ETF, đất để lâu · 25–35%</td></tr>
-            <tr><td>3 · Tạo thu nhập</td><td>Cổ phần có cổ tức, nhà cho thuê, trái phiếu · 30–50%</td></tr>
-            <tr><td>2 · Bảo vệ</td><td>Tiền trong ví, vàng, ngoại tệ, cho vay · 10–20%</td></tr>
-            <tr><td>1 · Vô hình</td><td>Kiến thức, sức khoẻ · đo bằng chi học + sức khoẻ ≥ 10% thu</td></tr>
-          </table>
-          <ol>
-            <li>Tab <b>Tài sản</b>: xem tổng, % từng lớp. Viền xanh = trong mục tiêu, vàng = lệch, đỏ = lệch hơn 10 điểm.</li>
-            <li>Chạm một tầng → danh sách lọc tài sản của lớp đó.</li>
-            <li><b>Định giá lại</b> (3 tháng/lần): chạm tài sản → <b>Định giá lại</b> → nhập giá mới → <b>Lưu giá mới</b>. Phần chênh là lãi/lỗ chưa thực hiện, không tính vào thu nhập.</li>
-          </ol>
-          <p class="ghi-chu-nho">Tài sản quá 90 ngày chưa định giá có banner nhắc. Tiền mặt, tài khoản, sổ tiết kiệm khai ở <b>Ví</b>, không khai ở Tài sản.</p>
-        </details>
-
-        <details id="hd-chiatien"><summary>Chia tiền mới vào tháp, thử quyết định lớn</summary>
-          <ol>
-            <li>Tab Tài sản → <b>Chia tiền mới vào tháp</b>.</li>
-            <li>Nhập số tiền sẵn sàng đầu tư (app gợi ý bằng số để dành tháng trước).</li>
-            <li>App chia: ① giữ trong ví cho đủ 6 tháng chi · ② bù lớp đang thiếu, lớp thấp trước · ③ không lớp nào thiếu thì chia theo mục tiêu.</li>
-            <li>Bấm <b>Ghi mua</b> ở từng dòng khi đã mua thật.</li>
-          </ol>
-          <p><b>Thử một quyết định lớn</b> (cùng màn): nhập mua / bán bao nhiêu, lớp nào, vay thêm bao nhiêu → xem tháp, nợ, quỹ khẩn cấp thay đổi ra sao. Chỉ là tính thử, không ghi vào sổ.</p>
-        </details>
-
-        <details id="hd-no"><summary>Khoản nợ</summary>
-          <ol>
-            <li>Tab Tài sản → chip <b>Nợ</b> → chạm khoản nợ.</li>
-            <li>Xem gốc còn lại, đã trả, ngày hết nợ dự kiến, 2 ngưỡng an toàn.</li>
-            <li>Bấm <b>Ghi trả nợ</b> → nhập phần gốc và phần lãi → <b>Lưu</b>.</li>
-          </ol>
-          <p class="ghi-chu-nho">Vay thêm: ＋ Ghi → Chuyển &amp; tài sản → Loại <b>Vay</b>.</p>
-        </details>
-
-        <details id="hd-doisoat"><summary>Đối soát ví (Chủ nhật, 2 phút)</summary>
-          <ol>
-            <li>☰ → <b>Đối soát ví</b> → chạm một ví.</li>
-            <li>Mở app ngân hàng hoặc đếm tiền mặt → nhập <b>Số dư thật</b>.</li>
-            <li>Khớp → <b>Khớp – lưu đối soát</b>.</li>
-            <li>Lệch → app gợi ý khoản cùng số tiền có thể ghi trùng. Nhớ ra khoản quên → <b>Ghi khoản … bị thiếu</b>. Không nhớ → <b>Ghi "Chênh lệch chưa rõ"</b> để ví khớp lại.</li>
-          </ol>
-        </details>
-
-        <details id="hd-chot"><summary>Chốt tháng (đầu tháng, 15 phút)</summary>
-          <ol>
-            <li>☰ → <b>Chốt tháng</b>. App mở sẵn tháng trước.</li>
-            <li>Làm 4 bước: ① đối soát mọi ví quanh cuối tháng · ② định giá tài sản quá hạn · ③ xem 4 ngăn · ④ Kaizen cho ngăn yếu. Bước nào không làm được thì <b>Bỏ qua</b> và ghi lý do.</li>
-            <li>Bấm <b>Khoá tháng …</b>. App chụp lại các chỉ số và chấm Kaizen đến hạn.</li>
-          </ol>
-          <p>Tháng đã khoá: không thêm, sửa, xoá khoản nào. Cần sửa thì <b>Mở khoá tháng này</b> + ghi lý do.</p>
-          <p class="ghi-chu-nho">Chỉ chồng khoá, mở khoá. Tháng 3, 6, 9, 12 có thêm bước 5: xem tháp và chia tiền.</p>
-        </details>
-
-        <details id="hd-kaizen"><summary>Kaizen: điều chỉnh nhỏ có đích, có hạn</summary>
-          <ol>
-            <li>Từ ngăn đang yếu bấm <b>＋ Kaizen</b> (hoặc ☰ → Kaizen → <b>＋ Kaizen</b>).</li>
-            <li>Chọn chỉ số, đặt đích, chọn hạn (1–3 tháng), ghi việc sẽ làm → <b>Tạo Kaizen</b>.</li>
-            <li>Người kia bấm <b>Góp ý kiến</b>.</li>
-            <li>Hết hạn: app tự chấm khi khoá tháng, hoặc bấm <b>Chấm kết quả</b>.</li>
-          </ol>
-        </details>
-
-        <details id="hd-xuhuong"><summary>Xu hướng các tháng</summary>
-          <p>☰ → <b>Xu hướng</b> → chọn chỉ số (để dành, thu thụ động, của cải thật…). Chạm vào biểu đồ để xem số từng tháng; bảng bên dưới có đánh giá Tốt / Chú ý / Yếu.</p>
-        </details>
-
-        <details id="hd-caidat"><summary>Cài đặt</summary>
-          <table class="bang">
-            <tr><td>Sổ</td><td>Tên sổ, mục tiêu để dành %, ngày chốt tháng (1–5)</td></tr>
-            <tr><td>Hai vợ chồng</td><td>Đổi tên hiển thị, tạo mã mời vợ</td></tr>
-            <tr><td>Danh mục</td><td>Thêm, sửa, ẩn, xoá, sắp xếp</td></tr>
-            <tr><td>Khoản định kỳ</td><td>Lương, tiền nhà, học phí…</td></tr>
-            <tr><td>Mục tiêu tháp &amp; ngưỡng</td><td>% mục tiêu 4 lớp, ngưỡng xanh/đỏ 8 chỉ số, mức báo động ngân sách</td></tr>
-            <tr><td>Nhắc trên máy này</td><td>Bật/tắt nhắc ghi cuối ngày, đối soát Chủ nhật, chốt tháng</td></tr>
-          </table>
-          <p class="ghi-chu-nho">Nhắc hiện ở đầu Nhà mình khi mở app; app không gửi thông báo khi đang đóng.</p>
-        </details>
-
-        <details id="hd-saoluu"><summary>Sao lưu, khôi phục, xuất bảng tính</summary>
-          <ul>
-            <li><b>Tự động:</b> 7 ngày một lần, cất vào Google Drive → thư mục "Sao lưu Tài chính Gia đình".</li>
-            <li><b>Sao lưu ngay:</b> ☰ → Sao lưu &amp; xuất → <b>Sao lưu ngay</b>.</li>
-            <li><b>Giữ một bản trên máy:</b> <b>Tải bản sao lưu về máy</b> (tệp .json).</li>
-            <li><b>Khôi phục</b> (chồng): bấm <b>Khôi phục</b> cạnh một bản, hoặc <b>Chọn tệp .json…</b> → bấm xác nhận 2 lần. App tự sao lưu bản hiện tại trước; mã khoá giữ nguyên.</li>
-            <li><b>Xuất Excel:</b> <b>Tải bảng tính (.xlsx)</b>: 4 trang Giao dịch · Tài sản · Khoản nợ · Chỉ số theo tháng.</li>
-          </ul>
-        </details>
-
-        <details id="hd-quyen"><summary>Ai làm được gì</summary>
-          <table class="bang">
-            <tr><th>Việc</th><th>Chồng</th><th>Vợ</th></tr>
-            <tr><td>Ghi, xem sổ, báo cáo, 4 ngăn, tháp</td><td>✓</td><td>✓</td></tr>
-            <tr><td>Sửa, xoá khoản</td><td>Mọi khoản</td><td>Khoản mình ghi</td></tr>
-            <tr><td>Ngân sách, Kaizen, đối soát, sao lưu, xuất</td><td>✓</td><td>✓</td></tr>
-            <tr><td>Ví, tài sản, nợ, định giá, danh mục, định kỳ, cài đặt</td><td>✓</td><td>–</td></tr>
-            <tr><td>Khoá, mở khoá tháng; khôi phục</td><td>✓</td><td>–</td></tr>
-          </table>
-        </details>
-
-        <details id="hd-suco"><summary>Khi gặp sự cố</summary>
-          <table class="bang">
-            <tr><td><b>Chồng quên mã khoá</b></td><td>Google Sheet → Tiện ích mở rộng → Apps Script → chạy hàm <i>taoLaiMaKichHoatChong</i> → lấy mã trong Nhật ký thực thi → app: <b>Lần đầu dùng? Kích hoạt</b>.</td></tr>
-            <tr><td><b>Vợ quên mã khoá</b></td><td>Chồng: ☰ → Cài đặt → <b>Tạo mã mới cho vợ</b> → vợ kích hoạt lại.</td></tr>
-            <tr><td><b>"Sai 5 lần"</b></td><td>Chờ 5 phút rồi nhập lại.</td></tr>
-            <tr><td><b>"Chưa đồng bộ n khoản"</b></td><td>Mất mạng lúc lưu. Có mạng lại thì bấm <b>Thử lại</b>. Đừng ghi lại lần nữa.</td></tr>
-            <tr><td><b>Không thấy khoản người kia vừa ghi</b></td><td>Bấm ⟳ ở góc trên.</td></tr>
-            <tr><td><b>"Tháng … đã khoá"</b></td><td>☰ → Chốt tháng → chọn tháng → <b>Mở khoá</b> (chồng).</td></tr>
-            <tr><td><b>Số dư ví khác tiền thật</b></td><td>Làm Đối soát ví.</td></tr>
-            <tr><td><b>Mua vàng sao không thấy trong chi?</b></td><td>Đúng: mua tài sản là đổi tiền thành tài sản, không phải tiêu. Xem ở tab Tài sản.</td></tr>
-            <tr><td><b>Bán có lãi sao thu không tăng?</b></td><td>Lãi bán tài sản ghi ở lịch sử giá tài sản, không vào thu nhập hằng tháng.</td></tr>
-            <tr><td><b>"Không kết nối được máy chủ"</b></td><td>Kiểm tra mạng. Vẫn lỗi: Apps Script → Triển khai → Quản lý triển khai, xem còn chế độ "Bất kỳ ai".</td></tr>
-          </table>
-        </details>
-
-        <details id="hd-tu"><summary>Từ ngữ trong app</summary>
-          <table class="bang">
-            <tr><td><b>Ví</b></td><td>Mọi nơi giữ tiền: tiền mặt, tài khoản ngân hàng, chứng khoán, ví điện tử, sổ tiết kiệm.</td></tr>
-            <tr><td><b>Để dành</b></td><td>Thu − chi trong kỳ.</td></tr>
-            <tr><td><b>Của cải thật</b></td><td>Tiền trong ví + tài sản − nợ.</td></tr>
-            <tr><td><b>Phải thu</b></td><td>Tiền mình cho người khác vay.</td></tr>
-            <tr><td><b>Thu thụ động</b></td><td>Tiền tự về không cần làm: lãi, cổ tức, cho thuê.</td></tr>
-            <tr><td><b>Quỹ khẩn cấp</b></td><td>Tiền trong ví đủ sống bao nhiêu tháng nếu mất thu nhập.</td></tr>
-            <tr><td><b>Định giá lại</b></td><td>Cập nhật giá thị trường của tài sản.</td></tr>
-            <tr><td><b>Đối soát</b></td><td>So số dư trong sổ với tiền thật.</td></tr>
-            <tr><td><b>Chốt / khoá tháng</b></td><td>Kiểm lại cuối tháng rồi khoá để số không bị sửa nhầm.</td></tr>
-            <tr><td><b>Kaizen</b></td><td>Một điều chỉnh nhỏ có đích và hạn.</td></tr>
-          </table>
+        <details class="hd-gd" id="hdg-tra"><summary><span class="hd-ico">📚</span><span>Tra cứu khi cần<small>chuyển tiền, sửa xoá, danh mục, sao lưu, sự cố, từ ngữ</small></span></summary>
+          <details class="hd-buoc" id="hd-chuyen"><summary><span class="hd-so">•</span><span>Chuyển tiền, mua bán tài sản, vay, trả nợ</span></summary>
+            <p>＋ Ghi → tab <b>Chuyển &amp; tài sản</b> → chọn <b>Loại</b>. Những loại này không làm sai thu chi vì tiền chỉ đổi chỗ.</p>
+<table class="bang"><tr><th>Loại</th><th>Khi nào</th><th>Vào thu chi?</th></tr>
+<tr><td>Chuyển giữa ví</td><td>Rút ATM, chuyển vợ ↔ chồng</td><td>Không</td></tr>
+<tr><td>Mua tài sản</td><td>Mua vàng, cổ phiếu, đất</td><td>Không</td></tr>
+<tr><td>Bán tài sản</td><td>Bán ra (nhập cả giá trị còn lại)</td><td>Không</td></tr>
+<tr><td>Cho vay · Thu nợ về</td><td>Cho mượn · người ta trả</td><td>Không</td></tr>
+<tr><td>Vay</td><td>Vay ngân hàng, người thân</td><td>Không</td></tr>
+<tr><td>Trả nợ (gốc + lãi)</td><td>Trả góp</td><td>Chỉ tiền lãi</td></tr></table>
+          </details>
+          <details class="hd-buoc" id="hd-sua"><summary><span class="hd-so">•</span><span>Sửa, xoá khoản đã ghi</span></summary>
+            <ol><li>Tab <b>Sổ</b> → chạm ngày trên lịch hoặc gõ ô tìm.</li><li>Chạm khoản → sửa → <b>Lưu</b>.</li><li>Xoá: <b>Xoá khoản này</b> bấm 2 lần; lỡ tay bấm <b>Hoàn tác</b> trong 5 giây.</li></ol>
+<p class="ghi-chu-nho">Vợ sửa được khoản mình ghi; chồng sửa mọi khoản. Tháng đã khoá chỉ xem.</p>
+          </details>
+          <details class="hd-buoc" id="hd-danhmuc"><summary><span class="hd-so">•</span><span>Thêm, sửa, xoá, sắp xếp danh mục</span></summary>
+            <ol><li>＋ Ghi → ô cuối <b>✎ Thêm, sửa danh mục</b> (hoặc ☰ → Cài đặt → Danh mục).</li><li><b>＋ Thêm danh mục</b>: chọn biểu tượng, tên, nhóm.</li><li><b>Sửa</b>: đổi tên, biểu tượng, nhóm · ↑ ↓ đổi thứ tự.</li><li>Chưa có khoản nào: <b>Xoá danh mục này</b>. Đã có khoản: tích <b>Ẩn</b>.</li></ol>
+<p class="ghi-chu-nho">Nhóm quan trọng: thu <b>Thụ động</b> tính vào ngăn Thu nhập; chi <b>Phát triển bản thân</b>, <b>Sức khoẻ</b> tính là đầu tư bản thân. Chỉ chồng sửa được.</p>
+          </details>
+          <details class="hd-buoc" id="hd-dinhky"><summary><span class="hd-so">•</span><span>Khoản định kỳ (lương, tiền nhà, học phí)</span></summary>
+            <ol><li>☰ → Cài đặt → <b>＋ Định kỳ</b>.</li><li>Tên, Thu/Chi, số tiền, danh mục, ví, ngày trong tháng → <b>Lưu</b>.</li></ol><p>Đến ngày, Nhà mình hỏi; bấm <b>Ghi</b> hoặc <b>Bỏ qua</b>. App không tự ghi.</p>
+          </details>
+          <details class="hd-buoc" id="hd-saoluu"><summary><span class="hd-so">•</span><span>Sao lưu, khôi phục, xuất Excel</span></summary>
+            <ul><li>App tự sao lưu 7 ngày một lần vào Google Drive, thư mục "Sao lưu Tài chính Gia đình".</li><li>☰ → <b>Sao lưu &amp; xuất</b> → <b>Sao lưu ngay</b> · <b>Tải bản sao lưu về máy</b> · <b>Tải bảng tính (.xlsx)</b>.</li><li>Khôi phục (chồng): bấm <b>Khôi phục</b> cạnh một bản → xác nhận 2 lần. Mã khoá giữ nguyên.</li></ul>
+          </details>
+          <details class="hd-buoc" id="hd-quyen"><summary><span class="hd-so">•</span><span>Ai làm được gì</span></summary>
+            <table class="bang"><tr><th>Việc</th><th>Chồng</th><th>Vợ</th></tr>
+<tr><td>Ghi, xem sổ, báo cáo, 4 ngăn, tháp</td><td>✓</td><td>✓</td></tr>
+<tr><td>Ngân sách, Kaizen, đối soát, sao lưu, xuất</td><td>✓</td><td>✓</td></tr>
+<tr><td>Sửa, xoá khoản</td><td>Mọi khoản</td><td>Khoản mình ghi</td></tr>
+<tr><td>Ví, tài sản, nợ, định giá, danh mục, cài đặt, khoá tháng, khôi phục</td><td>✓</td><td>–</td></tr></table>
+          </details>
+          <details class="hd-buoc" id="hd-suco"><summary><span class="hd-so">•</span><span>Khi gặp sự cố</span></summary>
+            <table class="bang">
+<tr><td><b>Chồng quên mã khoá</b></td><td>Apps Script → chạy <i>taoLaiMaKichHoatChong</i> → lấy mã ở Nhật ký thực thi → app: <b>Lần đầu dùng? Kích hoạt</b>.</td></tr>
+<tr><td><b>Vợ quên mã khoá</b></td><td>Chồng: ☰ → Cài đặt → <b>Tạo mã mới cho vợ</b>.</td></tr>
+<tr><td><b>"Sai 5 lần"</b></td><td>Chờ 5 phút.</td></tr>
+<tr><td><b>"Chưa đồng bộ n khoản"</b></td><td>Có mạng lại thì bấm <b>Thử lại</b>. Đừng ghi lại lần nữa.</td></tr>
+<tr><td><b>Không thấy khoản người kia vừa ghi</b></td><td>Bấm ⟳ góc trên.</td></tr>
+<tr><td><b>"Tháng … đã khoá"</b></td><td>☰ → Chốt tháng → <b>Mở khoá</b> (chồng).</td></tr>
+<tr><td><b>Mua vàng sao không vào chi?</b></td><td>Mua tài sản là đổi tiền thành tài sản, không phải tiêu.</td></tr>
+<tr><td><b>"Không kết nối được máy chủ"</b></td><td>Kiểm tra mạng. Vẫn lỗi: Apps Script → Quản lý triển khai, xem quyền "Bất kỳ ai".</td></tr></table>
+          </details>
+          <details class="hd-buoc" id="hd-tu"><summary><span class="hd-so">•</span><span>Từ ngữ trong app</span></summary>
+            <table class="bang">
+<tr><td><b>Ví</b></td><td>Mọi nơi giữ tiền: tiền mặt, ngân hàng, chứng khoán, ví điện tử, tiết kiệm.</td></tr>
+<tr><td><b>Để dành</b></td><td>Thu − chi trong kỳ.</td></tr>
+<tr><td><b>Của cải thật</b></td><td>Tiền trong ví + tài sản − nợ.</td></tr>
+<tr><td><b>Phải thu</b></td><td>Tiền mình cho người khác vay.</td></tr>
+<tr><td><b>Thu thụ động</b></td><td>Tiền tự về: lãi, cổ tức, cho thuê.</td></tr>
+<tr><td><b>Quỹ khẩn cấp</b></td><td>Tiền trong ví đủ sống bao nhiêu tháng nếu mất thu nhập.</td></tr>
+<tr><td><b>Đối soát</b></td><td>So số dư trong sổ với tiền thật.</td></tr>
+<tr><td><b>Chốt, khoá tháng</b></td><td>Kiểm lại cuối tháng rồi khoá số.</td></tr>
+<tr><td><b>Kaizen</b></td><td>Một điều chỉnh nhỏ có đích và hạn.</td></tr></table>
+          </details>
         </details>
       </div>
     </section>
@@ -1144,7 +1047,7 @@ async function vaoApp() {
   diToi(soSanSang() ? 'nha' : 's2');
 }
 function diToi(man) {
-  if (!soSanSang()) man = 's2';
+  if (!soSanSang() && man !== 'huongdan') man = 's2';
   document.querySelectorAll('.man').forEach(m => m.classList.remove('hien'));
   $('man-' + man).classList.add('hien'); KHO.man = man;
   $('tieu-de').textContent = TIEU_DE[man] || (KHO.so && KHO.so.ten) || 'Nhà mình';
@@ -1153,7 +1056,7 @@ function diToi(man) {
   if (man !== 'so' && S7.loc) { S7.loc = null; veS7(); }
   document.querySelector('nav.duoi').classList.toggle('an', man === 's2');     // đang thiết lập sổ: chưa cần thanh dưới
   window.scrollTo(0, 0);
-  if (soSanSang()) veManHien();
+  if (soSanSang() || man === 'huongdan') veManHien();
 }
 
 /* ═════════ Vẽ tất cả ═════════ */
@@ -1983,7 +1886,7 @@ function moMenu() {
      ['xuhuong', '📈', 'Xu hướng', 'Chỉ số qua các tháng'],
      ['caidat', '⚙️', 'Cài đặt', 'Sổ, danh mục, định kỳ, mục tiêu, nhắc'],
      ['saoluu', '💾', 'Sao lưu & xuất', 'Sao lưu, khôi phục, tải bảng tính'],
-     ['huongdan', '📖', 'Hướng dẫn sử dụng', 'Từ A tới Z: ghi, danh mục, báo cáo, tháp, chốt tháng, sự cố']]
+     ['huongdan', '📖', 'Hướng dẫn sử dụng', 'Bắt đầu từ đâu, từng bước làm gì, tra cứu khi cần']]
       .map(x => '<button data-menu="' + x[0] + '"><span class="i">' + x[1] + '</span><span>' + x[2] + '<small>' + esc(x[3]) + '</small></span></button>').join('') +
     '<button id="nut-khoa"><span class="i">⏻</span><span>Thoát khỏi máy này<small>Lần sau mở app phải nhập mã khoá</small></span></button></div>', null);
 }
@@ -2548,6 +2451,8 @@ function dinhKyCanGhi() {
 }
 function veNhacS5() {
   const h = homNay(), tt = thangTruoc(h.slice(0, 7)), ra = [];
+  const bTiep = buocDauConLai(trangThaiHD());
+  if (bTiep) ra.push('<div class="banner ngoc"><span class="chu">🚀 Bước tiếp theo: ' + bTiep + ' · ' + esc(HD_TEN(bTiep)) + '</span><button data-hd-mo="' + bTiep + '">Xem ›</button></div>');
   if (nhacBat('nhac_chot') && coCanChot(tt) && Number(h.slice(8)) >= so((KHO.so || {}).ngay_chot || 1)) {
     const st = trangThaiBuoc(tt); ra.push('<div class="banner vang"><span class="chu">🔒 Chốt ' + chuThang(tt).toLowerCase() + ': ' + (st.du ? 'đủ bước, bấm Khoá' : 'xong ' + st.xong + '/4 bước') + '</span><button data-chot="' + tt + '">Chốt ›</button></div>');
   }
@@ -2644,20 +2549,84 @@ function duLieuXuat() {
 /* ═════════ Hướng dẫn sử dụng ═════════ */
 function boDau(x) { return String(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); }
 function timHuongDan() {
-  const q = boDau($('hd-tim').value.trim()), ds_ = $$('#man-huongdan .hd details'); let n = 0;
-  ds_.forEach(d => { const co = !q || boDau(d.textContent).includes(q); d.classList.toggle('an', !co); d.open = !!q && co; if (co) n++; });
-  $('hd-kq').textContent = q ? (n ? n + ' mục có "' + $('hd-tim').value.trim() + '"' : 'Không thấy. Thử chữ khác, VD: "xoá", "ví", "mã khoá".') : '';
+  const q = boDau($('hd-tim').value.trim()); let n = 0;
+  $$('#man-huongdan .hd-buoc').forEach(d => { const co = !q || boDau(d.textContent).includes(q); d.classList.toggle('an', !co); d.open = !!q && co; if (q && co) n++; });
+  $$('#man-huongdan .hd-gd').forEach(g => { const co = !q || g.querySelector('.hd-buoc:not(.an)'); g.classList.toggle('an', !co); g.open = !!q && !!co; });
+  $('hd-kq').textContent = q ? (n ? n + ' mục có "' + $('hd-tim').value.trim() + '"' : 'Không thấy. Thử chữ khác, VD: "ví", "xoá", "mã khoá".') : '';
 }
 function moMucHD(id) {
   const d = $('hd-' + id); if (!d) return;
   if (KHO.man !== 'huongdan') diToi('huongdan');
-  $('hd-tim').value = ''; timHuongDan(); d.open = true;
+  if ($('hd-tim').value) { $('hd-tim').value = ''; timHuongDan(); }
+  const g = d.closest('.hd-gd'); if (g) g.open = true; d.open = true;
   setTimeout(() => d.scrollIntoView({ block: 'start', behavior: 'smooth' }), 30);
 }
+// Bước nào đã xong: đọc từ dữ liệu thật của sổ
+function trangThaiHD() {
+  const so_ = KHO.so || {}, ss = soSanSang(), vo = thanhVien('VO'), h = homNay(), t = h.slice(0, 7);
+  const homnay = ds('GiaoDich').filter(g => g.ngay === h).length;
+  const dsCuoi = ds('DoiSoat').map(d => d.ngay).sort().pop();
+  const kz = ds('Kaizen').filter(k => k.trang_thai === 'DANG_LAM').length;
+  const yeu = ss ? chiSo(t).ngan.filter(n => n.mau === 'do').length : 0;
+  return {
+    1: { xong: true },
+    2: { xong: !!so_.ngay_bat_dau, ghi: so_.ngay_bat_dau ? 'bắt đầu ' + ngayVN(so_.ngay_bat_dau) : '' },
+    3: { xong: ds('Vi').length > 0, ghi: ds('Vi').length ? ds('Vi').length + ' ví' : '' },
+    4: { xong: ss, ghi: ss ? ds('TaiSan').length + ' tài sản · ' + ds('KhoanNo').length + ' khoản nợ' : '' },
+    5: { xong: !!(vo && vo.trang_thai === 'DA_VAO'), ghi: vo && vo.trang_thai === 'DA_VAO' ? tenNguoi('VO') + ' đã vào sổ' : vo ? 'đã mời, chờ vợ kích hoạt' : '' },
+    6: { xong: ds('GiaoDich').length > 0 },
+    7: { xong: homnay > 0, lap: true, ghi: 'hôm nay ' + homnay + ' khoản' },
+    8: { xong: !!dsCuoi && soNgay(dsCuoi, h) <= 7, lap: true, ghi: dsCuoi ? 'lần cuối ' + ngayVN(dsCuoi).slice(0, 5) : 'chưa làm lần nào' },
+    9: { xong: ss && Object.keys(dongNS(t)).length > 0, lap: true, ghi: ss && Object.keys(dongNS(t)).length ? 'đã đặt ' + chuThang(t).toLowerCase() : 'chưa đặt tháng này' },
+    10: { lap: true }, 11: { lap: true, ghi: ss ? (yeu ? yeu + ' ngăn đang yếu' : 'không ngăn nào yếu') : '' },
+    12: { xong: kz > 0 || (ss && !yeu), lap: true, ghi: kz ? kz + ' Kaizen đang làm' : '' },
+    13: { xong: ss && !coCanChot(thangTruoc(t)), lap: true, ghi: ss && coCanChot(thangTruoc(t)) ? chuThang(thangTruoc(t)).toLowerCase() + ' chưa khoá' : '' },
+    14: { xong: ss && !tsCanDinhGia().length, lap: true, ghi: ss && tsCanDinhGia().length ? tsCanDinhGia().length + ' tài sản quá hạn' : '' },
+    15: { lap: true }
+  };
+}
+function buocDauConLai(st) {
+  const ds_ = laQT() ? [2, 3, 4, 5, 6] : [6];
+  return ds_.find(n => !st[n].xong) || null;
+}
+const HD_TEN = n => { const s = $('hd-b' + n); return s ? s.querySelector('summary span:last-child').firstChild.textContent : ''; };
+const HD_VI = n => { const p = $('hd-b' + n) && $('hd-b' + n).querySelector('.hd-vi'); return p ? p.textContent.replace(/^Vì sao:\s*/, '').split('. ')[0].replace(/\.$/, '') + '.' : ''; };
+const HD_NUT = n => { const b = $('hd-b' + n) && $('hd-b' + n).querySelector('[data-hd-lam]'); return b ? b.dataset.hdLam : ''; };
+function veHuongDan() {
+  const st = trangThaiHD();
+  Object.keys(st).forEach(n => { const s = document.querySelector('[data-hd-so="' + n + '"]'); if (!s) return;
+    s.classList.toggle('xong', !!st[n].xong); s.textContent = st[n].xong ? '✓' : n;
+    const sm = $('hd-b' + n).querySelector('summary small.hd-tt'); const txt = st[n].ghi || '';
+    if (sm) sm.textContent = txt; else if (txt) { const x = document.createElement('small'); x.className = 'hd-tt'; x.textContent = txt; $('hd-b' + n).querySelector('summary span:last-child').appendChild(x); } });
+  const dau = [1, 2, 3, 4, 5, 6], xongDau = dau.filter(n => st[n].xong).length;
+  const dem = { dau: xongDau + '/6' };
+  [['ngay', [7]], ['tuan', [8]], ['thang', [9, 12, 13]], ['quy', [14]]].forEach(([k, ns]) => dem[k] = ns.every(n => st[n].xong) ? '✓' : '');
+  $$('[data-hd-dem]').forEach(e => { e.textContent = dem[e.dataset.hdDem] || ''; e.classList.toggle('xong', dem[e.dataset.hdDem] === '✓' || dem[e.dataset.hdDem] === '6/6'); });
+  const tiep = buocDauConLai(st), the = $('hd-tien-do');
+  const dong = (n, ghi) => '<div class="hd-tiep"><div class="hd-tiep-ten"><span class="hd-so">' + n + '</span><b>' + esc(HD_TEN(n)) + '</b></div>' +
+    '<p class="ghi-chu-nho">' + esc(ghi || HD_VI(n)) + '</p><div class="hd-nut">' + (HD_NUT(n) ? '<button class="nut-nho vien-vang" data-hd-lam="' + HD_NUT(n) + '">Làm ngay ›</button>' : '') + '<button class="nut-nho" data-hd-mo="' + n + '">Xem cách làm</button></div></div>';
+  if (tiep) {
+    the.innerHTML = '<p class="trang-thai vang" style="margin:0 0 6px">Ngày đầu: xong ' + xongDau + '/6 bước</p><div class="thanh mau-xanh"><i style="width:' + (xongDau / 6 * 100) + '%"></i></div>' +
+      '<p class="ghi-chu-nho" style="margin:10px 0 4px">BƯỚC TIẾP THEO</p>' + dong(tiep);
+  } else {
+    const den = [8, 9, 13, 14].filter(n => !st[n].xong && (n !== 13 || st[13].ghi));
+    the.innerHTML = '<p class="trang-thai xanh" style="margin:0 0 6px">✓ Ngày đầu xong. Từ giờ đi theo nhịp: mỗi ngày ghi, Chủ nhật đối soát, đầu tháng chốt.</p>' +
+      (den.length ? '<p class="ghi-chu-nho" style="margin:10px 0 4px">VIỆC ĐẾN HẠN</p>' + den.map(n => dong(n, st[n].ghi)).join('') : '<p class="ghi-chu-nho">Không có việc đến hạn. Hôm nay chỉ cần ghi chi, thu.</p>');
+  }
+}
+const HD_LAM = {
+  so: () => diToi(soSanSang() ? 'caidat' : 's2'),
+  vi: () => { if (!laQT()) return toast('Chỉ chồng tạo được ví'); diToi(soSanSang() ? 'taisan' : 's2'); moFormVi(); },
+  xong: () => { if (!soSanSang()) { diToi('s2'); setTimeout(() => $('s2-xong').scrollIntoView({ block: 'center' }), 60); } else { diToi('taisan'); if (laQT()) moFormTS(); } },
+  moi: () => diToi(soSanSang() ? 'caidat' : 's2'),
+  ghi: () => moS6(), doisoat: () => diToi('doisoat'), ngansach: () => diToi('ngansach'), baocao: () => diToi('baocao'),
+  ngan: () => diToi('tuanhoan'), kaizen: () => diToi('kaizen'), chot: () => diToi('chotky'),
+  dinhgia: () => { diToi('taisan'); locS11('dg'); }, chiatien: () => diToi('chiatien')
+};
 
 /* ═════════ Gắn sự kiện cho phần hoàn thiện ═════════ */
 $('hd-tim').addEventListener('input', timHuongDan);
-Object.assign(VE_MAN, { taisan: veS10, tsct: veS12, noct: veS13, chiatien: veS14, xuhuong: veS18, chotky: veS19, doisoat: veS20, kaizen: veS21, caidat: veS22, saoluu: veS23, ngan: () => veS17(), tuanhoan: () => veS16(), ngansach: () => veS9(), baocao: () => veS8() });
+Object.assign(VE_MAN, { huongdan: veHuongDan, taisan: veS10, tsct: veS12, noct: veS13, chiatien: veS14, xuhuong: veS18, chotky: veS19, doisoat: veS20, kaizen: veS21, caidat: veS22, saoluu: veS23, ngan: () => veS17(), tuanhoan: () => veS16(), ngansach: () => veS9(), baocao: () => veS8() });
 $('nut-menu').addEventListener('click', moMenu);
 $('s10-loc-dg').addEventListener('click', () => locS11('dg'));
 $('s13-tra').addEventListener('click', () => moS6(null, { tab: 'KHAC', loai: 'TRA_NO', no: S13.ma }));
@@ -2712,6 +2681,8 @@ document.addEventListener('click', async e => {
       async () => { await luu('Kaizen', Object.assign({}, k, { y_kien: $('kz-yk').value.trim() })); dongHop(); veTatCa(); }); }
   const sdm = t.closest('[data-sua-dm]'); if (sdm && laQT()) return moFormDanhMuc(sdm.dataset.suaDm);
   const hdm = t.closest('[data-hd]'); if (hdm) return moMucHD(hdm.dataset.hd);
+  const hdo = t.closest('[data-hd-mo]'); if (hdo) return moMucHD('b' + hdo.dataset.hdMo);
+  const hdl = t.closest('[data-hd-lam]'); if (hdl && HD_LAM[hdl.dataset.hdLam]) return HD_LAM[hdl.dataset.hdLam]();
   const qd = t.closest('[data-ql-dm]'); if (qd) return moQuanLyDanhMuc(qd.dataset.qlDm);
   const qt2 = t.closest('#qldm-tab [data-n]'); if (qt2) return moQuanLyDanhMuc(qt2.dataset.n);
   if (t.closest('[data-ql-them]')) return moFormDanhMuc(null, QLDM.nhom);
