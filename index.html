@@ -570,7 +570,7 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
     </section>
     <!-- Nhập Excel: ví, tài sản, nợ một lần -->
     <section class="man" id="man-nhapexcel">
-      <div id="nx-vo" class="the an"><h2>Nhập Excel</h2><p class="mo-ta">Ví, tài sản, nợ do chồng (quản trị) khai. Vợ nhờ chồng tải file lên.</p></div>
+      <div id="nx-vo" class="the an"><h2>Nhập Excel</h2><p class="mo-ta">Ví, tài sản, nợ do người có quyền quản trị khai.</p></div>
       <div id="nx-qt">
         <div class="the"><h2>Cập nhật ví, tài sản, nợ bằng một file</h2>
           <ol class="nx-buoc"><li><b>Tải file mẫu</b>: đã điền sẵn ví, tài sản đang có.</li><li><b>Sửa số</b> bằng Excel hoặc Google Sheets, lưu lại.</li><li><b>Chọn file</b> → xem trước → <b>Áp dụng</b>.</li></ol>
@@ -692,7 +692,7 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
             <p class="hd-xong">✅ <b>Xong khi thấy:</b> Kaizen nằm ở ☰ → Kaizen → <b>Đang làm</b>.</p>
             <div class="hd-nut"><button class="nut-nho vien-vang" data-hd-lam="kaizen">Mở Kaizen ›</button><button class="nut-nho" data-hd-mo="13">Tiếp: 13 · Chốt tháng trước ›</button></div>
           </details>
-          <details class="hd-buoc" id="hd-b13" data-buoc="13"><summary><span class="hd-so" data-hd-so="13">13</span><span>Chốt tháng trước<small>Chồng khoá; vợ làm được bước ①</small></span></summary>
+          <details class="hd-buoc" id="hd-b13" data-buoc="13"><summary><span class="hd-so" data-hd-so="13">13</span><span>Chốt tháng trước<small>Chồng hoặc vợ</small></span></summary>
             <p class="hd-vi"><b>Vì sao:</b> Kiểm lại một lượt rồi <b>khoá</b> để số tháng cũ không bị sửa nhầm; app chụp lại các chỉ số làm mốc so sánh.</p>
             <ol><li>☰ → <b>Chốt tháng</b> (app mở sẵn tháng trước).</li><li>Làm 4 bước: ① đối soát mọi ví quanh cuối tháng · ② định giá tài sản quá hạn · ③ xem 4 ngăn · ④ Kaizen. Bước nào không làm được: <b>Bỏ qua</b> + ghi lý do.</li><li>Bấm <b>Khoá tháng …</b>.</li></ol>
             <div class="hd-them">Cần sửa tháng đã khoá: <b>Mở khoá tháng này</b> + ghi lý do.</div>
@@ -701,7 +701,7 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
           </details>
         </details>
         <details class="hd-gd" id="hdg-quy"><summary><span class="hd-ico">📈</span><span>Đầu mỗi quý<small>20 phút · bước 14–15</small></span><span class="hd-dem" data-hd-dem="quy"></span></summary>
-          <details class="hd-buoc" id="hd-b14" data-buoc="14"><summary><span class="hd-so" data-hd-so="14">14</span><span>Định giá lại tài sản<small>Chồng</small></span></summary>
+          <details class="hd-buoc" id="hd-b14" data-buoc="14"><summary><span class="hd-so" data-hd-so="14">14</span><span>Định giá lại tài sản<small>Chồng hoặc vợ</small></span></summary>
             <p class="hd-vi"><b>Vì sao:</b> Giá vàng, cổ phiếu, đất thay đổi. Không cập nhật thì tổng tài sản và tháp sai. Định giá lại <b>không</b> tính vào thu nhập.</p>
             <ol><li>Tab <b>Tài sản</b> → banner "… chưa định giá" → <b>Xem</b> (hoặc chạm một tài sản).</li><li>Bấm <b>Định giá lại</b> → nhập giá hôm nay → <b>Lưu giá mới</b>.</li><li>Vàng tính theo chỉ: bấm <b>🏷 Cập nhật giá theo chỉ</b> → nhập giá 1 chỉ → app nhân ra tiền cho mọi khoản vàng, kể cả vàng cho mượn.</li></ol>
             <div class="hd-them">📥 Cập nhật mọi thứ một lần: ☰ → <b>Nhập Excel</b> → tải file mẫu (đã có số hiện tại) → sửa giá, số dư → tải lên. Cho mượn tăng, giảm thì app hỏi tiền ra, về ví nào. Khoản không đổi được ghi "giữ giá".</div>
@@ -729,11 +729,11 @@ nav.duoi .khung{display:flex;align-items:flex-end;justify-content:space-between;
           </details>
           <details class="hd-buoc" id="hd-sua"><summary><span class="hd-so">•</span><span>Sửa, xoá khoản đã ghi</span></summary>
             <ol><li>Tab <b>Sổ</b> → chạm ngày trên lịch hoặc gõ ô tìm.</li><li>Chạm khoản → sửa → <b>Lưu</b>.</li><li>Xoá: <b>Xoá khoản này</b> bấm 2 lần; lỡ tay bấm <b>Hoàn tác</b> trong 5 giây.</li></ol>
-<p class="ghi-chu-nho">Vợ sửa được khoản mình ghi; chồng sửa mọi khoản. Tháng đã khoá chỉ xem.</p>
+<p class="ghi-chu-nho">Vợ và chồng đều sửa, xoá được mọi khoản. Tháng đã khoá chỉ xem.</p>
           </details>
           <details class="hd-buoc" id="hd-danhmuc"><summary><span class="hd-so">•</span><span>Thêm, sửa, xoá, sắp xếp danh mục</span></summary>
             <ol><li>＋ Ghi → ô cuối <b>✎ Thêm, sửa danh mục</b> (hoặc ☰ → Cài đặt → Danh mục).</li><li><b>＋ Thêm danh mục</b>: chọn biểu tượng, tên, nhóm.</li><li><b>Sửa</b>: đổi tên, biểu tượng, nhóm · ↑ ↓ đổi thứ tự.</li><li>Chưa có khoản nào: <b>Xoá danh mục này</b>. Đã có khoản: tích <b>Ẩn</b>.</li></ol>
-<p class="ghi-chu-nho">Nhóm quan trọng: thu <b>Thụ động</b> tính vào ngăn Thu nhập; chi <b>Phát triển bản thân</b>, <b>Sức khoẻ</b> tính là đầu tư bản thân. Chỉ chồng sửa được.</p>
+<p class="ghi-chu-nho">Nhóm quan trọng: thu <b>Thụ động</b> tính vào ngăn Thu nhập; chi <b>Phát triển bản thân</b>, <b>Sức khoẻ</b> tính là đầu tư bản thân. Vợ hoặc chồng sửa được.</p>
           </details>
           <details class="hd-buoc" id="hd-dinhky"><summary><span class="hd-so">•</span><span>Khoản định kỳ (lương, tiền nhà, học phí)</span></summary>
             <ol><li>☰ → Cài đặt → <b>＋ Định kỳ</b>.</li><li>Tên, Thu/Chi, số tiền, danh mục, ví, ngày trong tháng → <b>Lưu</b>.</li></ol><p>Đến ngày, Nhà mình hỏi; bấm <b>Ghi</b> hoặc <b>Bỏ qua</b>. App không tự ghi.</p>
@@ -1217,7 +1217,8 @@ function veDanhSachChung() {
   $$('[data-ds-no]').forEach(el => el.innerHTML = (hNo.split('data-NO_ATTR').join(el.closest('#man-s2') ? 'data-sua-no' : 'data-mo-no')) || (el.closest('#s2-qt') ? '' : '<div class="trong">Không có khoản nợ.</div>'));
 
   const vo = thanhVien('VO');
-  const hMoi = vo && vo.trang_thai === 'DA_VAO'
+  const hMoi = toi() === 'VO' ? '<p class="mo-ta">✓ ' + esc(tenNguoi('VO')) + ' đã vào sổ, quyền như chồng. Quên mã khoá: nhờ chồng bấm "Tạo mã mới cho vợ".</p>'
+    : vo && vo.trang_thai === 'DA_VAO'
     ? '<p class="mo-ta">✓ ' + esc(tenNguoi('VO')) + ' đã vào sổ.</p><button class="nut-them" style="margin-top:8px" data-moi>Tạo mã mới cho vợ (khi vợ quên mã khoá)</button><div data-ma-moi style="margin-top:8px"></div>'
     : '<p class="mo-ta">Tạo mã kích hoạt 6 số, gửi cho vợ. Vợ mở app, chọn <b>Vợ</b> → <b>Lần đầu dùng? Kích hoạt</b>.</p>' +
       '<button class="nut-them" style="margin-top:8px" data-moi>' + (vo ? 'Tạo mã mới cho vợ' : 'Tạo mã mời vợ') + '</button><div data-ma-moi style="margin-top:8px"></div>';
@@ -2431,7 +2432,7 @@ function veS22() {
     '<div class="hai-cot"><div class="truong"><label for="c-mt">Mục tiêu để dành (% thu)</label><input id="c-mt" inputmode="numeric" maxlength="2" value="' + esc(so_.muc_tieu_de_danh || 30) + '"></div>' +
     '<div class="truong"><label for="c-chot">Ngày chốt tháng</label><select id="c-chot">' + [1, 2, 3, 4, 5].map(d => '<option' + (so(so_.ngay_chot || 1) === d ? ' selected' : '') + '>' + d + '</option>').join('') + '</select></div></div>' +
     '<p class="ghi-chu-nho" style="margin-top:6px">Ngày bắt đầu sổ: ' + ngayVN(so_.ngay_bat_dau) + ' (không đổi được).</p><button class="nut-vien" id="c-luu-so">Lưu</button>';
-  const tv = v => { const t = thanhVien(v); return '<div class="dong"><div class="giua"><div class="ten">' + esc(tenNguoi(v)) + '</div><div class="phu">' + CHU[v] + (v === 'CHONG' ? ' · quản trị' : '') + ' · ' + (t && t.trang_thai === 'DA_VAO' ? 'đã vào sổ' : t ? 'đã mời, chưa vào' : 'chưa mời') + '</div></div>' + (qt && t ? '<button class="nut-nho" data-doi-ten="' + v + '">Đổi tên</button>' : '') + '</div>'; };
+  const tv = v => { const t = thanhVien(v); return '<div class="dong"><div class="giua"><div class="ten">' + esc(tenNguoi(v)) + '</div><div class="phu">' + CHU[v] + (v === 'CHONG' || (t && laDung(t.la_quan_tri)) ? ' · quản trị' : '') + ' · ' + (t && t.trang_thai === 'DA_VAO' ? 'đã vào sổ' : t ? 'đã mời, chưa vào' : 'chưa mời') + '</div></div>' + (qt && t ? '<button class="nut-nho" data-doi-ten="' + v + '">Đổi tên</button>' : '') + '</div>'; };
   $('s22-nguoi').innerHTML = tv('CHONG') + tv('VO');
   $$('#s22-dm-tab button').forEach(b => b.classList.toggle('dang-chon', b.dataset.n === S22.dm));
   const dms = dsDanhMuc(S22.dm);
@@ -2727,7 +2728,7 @@ function veHuongDan() {
 }
 const HD_LAM = {
   so: () => diToi(soSanSang() ? 'caidat' : 's2'),
-  vi: () => { if (!laQT()) return toast('Chỉ chồng tạo được ví'); diToi(soSanSang() ? 'taisan' : 's2'); moFormVi(); },
+  vi: () => { if (!laQT()) return toast('Chỉ quản trị tạo được ví'); diToi(soSanSang() ? 'taisan' : 's2'); moFormVi(); },
   xong: () => { if (!soSanSang()) { diToi('s2'); setTimeout(() => $('s2-xong').scrollIntoView({ block: 'center' }), 60); } else { diToi('taisan'); if (laQT()) moFormTS(); } },
   moi: () => diToi(soSanSang() ? 'caidat' : 's2'),
   ghi: () => moS6(), doisoat: () => diToi('doisoat'), ngansach: () => diToi('ngansach'), baocao: () => diToi('baocao'),
