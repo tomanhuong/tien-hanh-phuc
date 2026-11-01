@@ -836,7 +836,7 @@ const CAU_HINH = {
 };
 
 /* ═════════ Trạng thái chung ═════════ */
-const KHO = { toi: null, so: null, duLieu: {}, loiDongBo: [], phien: null };
+const KHO = { toi: null, so: null, duLieu: {}, hangCho: docHangCho(), lanLoi: 0, phien: null };
 const LOAI_TEN = { THU: 'Thu', CHI: 'Chi', CHUYEN_VI: 'Chuyển giữa ví', MUA_TS: 'Mua tài sản', BAN_TS: 'Bán tài sản',
   CHO_VAY: 'Cho vay', THU_NO: 'Thu nợ về', VAY: 'Vay', TRA_GOC: 'Trả nợ gốc', TRA_LAI: 'Trả lãi vay', TRA_NO: 'Trả nợ (gốc + lãi)' };
 const LOAI_ICO = { CHUYEN_VI: '⇄', MUA_TS: '🥇', BAN_TS: '💰', CHO_VAY: '🤝', THU_NO: '↩', VAY: '🏦', TRA_GOC: '✔', TRA_LAI: '💸' };
@@ -917,51 +917,86 @@ async function taiLai() {
   KHO.toi = r.toi; KHO.duLieu = r.duLieu || {};
   KHO.so = (KHO.duLieu.SoGiaDinh || [])[0] || null;
   Object.values(KHO.duLieu).forEach(b => Array.isArray(b) && b.forEach(x => x._dongBo = 'DA_DONG_BO'));
-  veTatCa();
+  try { localStorage.setItem('bo_nho_' + r.toi.vai_tro, JSON.stringify({ toi: r.toi, duLieu: r.duLieu })); } catch (e) {}   // mở app lần sau hiện ngay
+  apHangCho(); KHO.so = (KHO.duLieu.SoGiaDinh || [])[0] || null;
+  veTatCa(); henDongBo(0);
   return r;
 }
-// Lưu 1 bản ghi: trên máy trước (CHỜ ĐỒNG BỘ) → kho chung → ĐÃ ĐỒNG BỘ (R2). Lỗi mạng: giữ lại, hàng chờ "Thử lại" (R30).
+// Lưu tức thì (R2): ghi lên máy, trả kết quả ngay, không chờ Google. Hàng chờ cất trong máy (đóng app vẫn còn),
+// gửi nền theo lô (luuNhieu, giữ đúng thứ tự). Lỗi mạng: tự thử lại (R30). Máy chủ từ chối: trả lại bản cũ + báo.
+function docHangCho() { try { return (JSON.parse(docMay('hang_cho') || '[]') || []).map(x => (delete x.gui, x)); } catch (e) { return []; } }
+function ghiHangCho() { luuMay('hang_cho', KHO.hangCho.length ? JSON.stringify(KHO.hangCho) : null); }
+function boGach(o) { const r = Object.assign({}, o); Object.keys(r).forEach(k => k.startsWith('_') && delete r[k]); return r; }
+function datCucBo(bang, banGhi, trangThai) {
+  const bangDL = KHO.duLieu[bang] = KHO.duLieu[bang] || [], i = bangDL.findIndex(x => x.ma === banGhi.ma), o = Object.assign({}, banGhi, { _dongBo: trangThai });
+  i >= 0 ? (bangDL[i] = o) : bangDL.push(o); return o;
+}
 async function luu(bang, banGhi) {
-  banGhi = Object.assign({}, banGhi);
-  Object.keys(banGhi).forEach(k => k.startsWith('_') && delete banGhi[k]);
+  banGhi = boGach(banGhi);
   if (!banGhi.ma) banGhi.ma = taoMa();
   banGhi.luc_sua = new Date().toISOString();
-  const bangDL = KHO.duLieu[bang] = KHO.duLieu[bang] || [];
-  const i = bangDL.findIndex(x => x.ma === banGhi.ma);
-  const cuCucBo = i >= 0 ? bangDL[i] : null;
-  const cucBo = Object.assign({}, banGhi, { _dongBo: 'CHO_DONG_BO' });
-  if (!cucBo.luc_tao) cucBo.luc_tao = banGhi.luc_sua;
-  if (bang === 'GiaoDich' && !cucBo.nguoi_ghi) cucBo.nguoi_ghi = toi();
-  i >= 0 ? (bangDL[i] = cucBo) : bangDL.push(cucBo);
-  try {
-    const r = await goi('luu', { bang, banGhi });
-    const j = bangDL.findIndex(x => x.ma === banGhi.ma);
-    bangDL[j] = Object.assign({}, r.banGhi, { _dongBo: 'DA_DONG_BO' });
-    KHO.loiDongBo = KHO.loiDongBo.filter(x => x.banGhi.ma !== banGhi.ma);
-    if (r.ketQua === 'cu') toast('Máy kia vừa sửa khoản này – đã giữ bản mới hơn');
-    veBannerDongBo();
-    return r;
-  } catch (e) {
-    if (!e.phanHoi) {                      // lỗi mạng
-      if (!KHO.loiDongBo.some(x => x.banGhi.ma === banGhi.ma)) KHO.loiDongBo.push({ bang, banGhi });
-      veBannerDongBo();
-    } else {                               // máy chủ từ chối → trả lại bản cũ
-      const k = bangDL.findIndex(x => x.ma === banGhi.ma);
-      if (cuCucBo) bangDL[k] = cuCucBo; else if (k >= 0) bangDL.splice(k, 1);
-    }
-    throw e;
-  }
+  const cu = (KHO.duLieu[bang] || []).find(x => x.ma === banGhi.ma);
+  if (!banGhi.luc_tao) banGhi.luc_tao = cu && cu.luc_tao || banGhi.luc_sua;
+  if (bang === 'GiaoDich') { if (!banGhi.nguoi_ghi) banGhi.nguoi_ghi = cu && cu.nguoi_ghi || toi(); if (!banGhi.nguoi) banGhi.nguoi = toi(); }
+  const cucBo = datCucBo(bang, banGhi, 'CHO_DONG_BO');
+  const cho = KHO.hangCho.find(x => !x.gui && x.bang === bang && x.banGhi.ma === banGhi.ma);
+  if (cho) cho.banGhi = banGhi;                                   // sửa liên tiếp 1 khoản: gộp, chỉ gửi bản cuối
+  else KHO.hangCho.push({ bang, banGhi, cu: cu ? boGach(cu) : null, vai: toi() });
+  ghiHangCho(); henDongBo(0);
+  return { ok: true, ketQua: 'cho', banGhi: boGach(cucBo) };
 }
+let henDB = null, dangDB = null;
+function henDongBo(ms) { clearTimeout(henDB); henDB = setTimeout(() => { dongBo(); }, ms || 0); }
+async function dongBo() {
+  if (dangDB) return dangDB;
+  const lo = KHO.hangCho.filter(x => !x.gui && x.vai === toi()).slice(0, 100);
+  if (!lo.length || !KHO.phien) return;
+  lo.forEach(x => x.gui = true);
+  dangDB = (async () => {
+    try {
+      const r = await goi('luuNhieu', { ds: lo.map(x => ({ bang: x.bang, banGhi: x.banGhi })) });
+      let doi = false;
+      lo.forEach((x, i) => { doi = nhanKetQua(x, r.kq[i] || { ok: true }) || doi; });
+      KHO.hangCho = KHO.hangCho.filter(x => !lo.includes(x)); KHO.lanLoi = 0; ghiHangCho();
+      if (doi) veTatCa();
+    } catch (e) {
+      lo.forEach(x => delete x.gui);
+      KHO.lanLoi = (KHO.lanLoi || 0) + 1;
+      if (KHO.phien) henDongBo(Math.min(60000, 3000 * KHO.lanLoi));   // mất mạng: thử lại 3s, 6s, 9s… tối đa 1 phút
+    } finally { dangDB = null; veBannerDongBo(); }
+    if (!KHO.lanLoi && KHO.hangCho.some(x => !x.gui && x.vai === toi())) await dongBo();   // còn khoản ghi thêm trong lúc gửi
+  })();
+  return dangDB;
+}
+// Trả về true nếu dữ liệu trên máy đổi, cần vẽ lại
+function nhanKetQua(x, k) {
+  const conMoiHon = KHO.hangCho.some(y => y !== x && y.bang === x.bang && y.banGhi.ma === x.banGhi.ma);
+  if (k.ok) {
+    if (!conMoiHon) datCucBo(x.bang, k.banGhi || x.banGhi, 'DA_DONG_BO');
+    if (k.ketQua === 'cu' && k.banGhi && k.banGhi.luc_sua !== x.banGhi.luc_sua) { toast('Máy kia vừa sửa khoản này – đã giữ bản mới hơn'); return true; }
+    return false;
+  }
+  if (!conMoiHon) {                                               // máy chủ từ chối → trả lại bản cũ
+    if (x.cu) datCucBo(x.bang, x.cu, 'DA_DONG_BO');
+    else { const L = KHO.duLieu[x.bang] || [], i = L.findIndex(y => y.ma === x.banGhi.ma); if (i >= 0) L.splice(i, 1); }
+  }
+  toast('Chưa lưu được' + (x.banGhi.ten ? ' "' + x.banGhi.ten + '"' : x.banGhi.so_tien ? ' khoản ' + fmtDu(x.banGhi.so_tien) : '') + ': ' + (k.loi || 'lỗi không rõ') + '. Đã hoàn lại.');
+  return true;
+}
+// Sau khi tải dữ liệu mới từ Google: đặt lại các khoản còn chờ gửi để không bị mất trên màn hình
+function apHangCho() { KHO.hangCho.forEach(x => { if (x.vai === toi()) datCucBo(x.bang, x.banGhi, 'CHO_DONG_BO'); }); }
 async function thuLaiDongBo() {
-  for (const x of KHO.loiDongBo.slice()) { try { await luu(x.bang, x.banGhi); } catch (e) {} }
-  if (!KHO.loiDongBo.length) toast('Đã đồng bộ xong');
+  KHO.lanLoi = 0; await dongBo();
+  if (!KHO.hangCho.length) toast('Đã đồng bộ xong'); else toast('Chưa có mạng, app sẽ tự thử lại');
   veTatCa();
 }
 function veBannerDongBo() {
-  const n = KHO.loiDongBo.length;
-  $('banner-dong-bo').classList.toggle('an', n === 0);
-  $('banner-dong-bo-chu').textContent = 'Chưa đồng bộ ' + n + ' khoản';
+  const n = KHO.hangCho.filter(x => x.vai === toi()).length;
+  $('banner-dong-bo').classList.toggle('an', !(n && KHO.lanLoi));   // chỉ hiện khi đã gửi hỏng, không nháy mỗi lần ghi
+  $('banner-dong-bo-chu').textContent = 'Chưa đồng bộ ' + n + ' khoản · app tự thử lại';
 }
+window.addEventListener('online', () => henDongBo(0));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') henDongBo(0); });
 
 /* ═════════ ST14 – Máy tính số dư, giá trị, nợ (không lưu, luôn tính) ═════════ */
 // R38: số dư ví tại ngày D
@@ -1064,7 +1099,8 @@ async function datMa() {
 function baoLoiS1(chu) { $('s1-loi').textContent = chu; }
 async function khoaApp() {
   $('toast').classList.remove('hien');
-  const p = KHO.phien; quenPhien(); KHO.duLieu = {};
+  if (KHO.hangCho.length) { try { await dongBo(); } catch (e) {} }
+  const p = KHO.phien; try { localStorage.removeItem('bo_nho_' + toi()); } catch (e) {} quenPhien(); KHO.duLieu = {};
   hienDangNhap(); baoLoiS1('');
   if (p) { try { await fetch(CAU_HINH.API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ phien: p, hanhDong: 'dangXuat' }) }); } catch (e) {} }
 }
@@ -1073,6 +1109,13 @@ async function khoaApp() {
 function soSanSang() { return KHO.so && KHO.so.trang_thai === 'SAN_SANG'; }
 async function vaoApp() {
   $('s1').classList.add('an'); $('app').classList.remove('an');
+  let c = null; try { c = JSON.parse(localStorage.getItem('bo_nho_' + docMay('vai')) || 'null'); } catch (e) {}
+  if (c && c.duLieu) {                       // có bản trên máy: hiện ngay, lấy bản mới ở nền
+    KHO.toi = c.toi; KHO.duLieu = c.duLieu; apHangCho(); KHO.so = (KHO.duLieu.SoGiaDinh || [])[0] || null;
+    veTatCa(); diToi(soSanSang() ? 'nha' : 's2');
+    taiLai().catch(e => { if (KHO.phien) toast('Đang dùng dữ liệu trên máy – chưa lấy được bản mới: ' + e.message); });
+    return;
+  }
   try { await taiLai(); } catch (e) { if (!KHO.phien) return; toast('Không tải được dữ liệu: ' + e.message); }
   diToi(soSanSang() ? 'nha' : 's2');
 }
